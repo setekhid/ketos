@@ -9,6 +9,7 @@ The core:
 	* [cgroup](https://goo.gl/9iALHX) + [namespace](https://goo.gl/ki7A7s) -> [LXC](https://goo.gl/xyGEzu) -> [libcontainer](https://git.io/vdnO4)
 	* This [article](https://goo.gl/ngTwR7) contains how to tar entire filesystem and chroot into it. Also contains a link to a script to copy some nessary files into chroot root. [Wikipedia of chroot](https://goo.gl/ksHZgG) and [ubuntu document](https://goo.gl/C8rtvn).
 	* [Imitate](https://goo.gl/xYXJgX) a docker runtime with chroot
+	* Use [fakeroot](https://goo.gl/GDVota), to pretend we are root user.
 
 * If rkt can fit in this situation or runc?
 * When docker image format will be replaced by OCI image format.
@@ -17,6 +18,9 @@ The core:
 	* See how to tar for the spec-s.
 	* Some combination of outer docker daemon storage driver and inner storage driver [doesn't work](https://goo.gl/cjKAUs), research the reason. The storage driver compatible matrix is [here](https://goo.gl/Me7EFF), and other information for choosing storage driver on the same page.
 	* How does `docker create` mount docker image and create a container.
+	* [How to use fuse](https://git.io/vdur0) in docker container
+
+* How to use fakechroot to imitate a union fs mounter
 
 Download base image and publish derived image to registry:
 
