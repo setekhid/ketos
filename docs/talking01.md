@@ -32,13 +32,15 @@ Decision
 blabla
 ----
 
-docker steps: pull image to container, container run Dockerfile, commit, tar image
+* docker steps: pull image to container, container run Dockerfile, commit, tar image
 
-review `docker create` code
+* review `docker create` code
+	* what does it actually do, mount `/dev`, `/proc` or doing something others
+	* what does `--privileged` mode actually do
 
-structure picture of the whole system
+* structure picture of the whole system
 
-a plan list
+* a plan list
 
 repos:
 ----
