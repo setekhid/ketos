@@ -2,11 +2,11 @@ xcbuild
 ====
 
 ```
-Usage: xcbuild subcommand
+Usage: xcb subcommand
 
 Subcommands:
-	chdroot
-	image-build
+	chroot
+	tar
 	pull
 	push
 ```
