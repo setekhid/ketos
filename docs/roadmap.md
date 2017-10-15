@@ -29,3 +29,5 @@ Download base image and publish derived image to registry:
 	* Version 2 manifest file spec is storing [here](https://git.io/vdcor), with name `manifest-v2-1.md` and `manifest-v2-2.md`. The version 1 spec is [here](https://git.io/vdcod), we might wanna its golang code from its parent folder.
 * Push image tar to docker registry.
 	* There is a project named [skopeo](https://git.io/vdcw6) can convert between docker image and OCI image, and seems can push to docker registry, see [this comment](https://git.io/vdc6g) of an issue
+		* Project skopeo using library [containers/image](https://github.com/containers/image) to manager registry communication.
+		* Project [containers/storage](https://github.com/containers/storage) can manage image layers.
