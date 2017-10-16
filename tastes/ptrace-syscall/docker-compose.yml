@@ -1,0 +1,8 @@
+version: '3'
+services:
+
+    ptrace-syscall:
+        build: .
+        command: /go/bin/strace-from-scratch echo hello world
+        cap_add:
+            - SYS_PTRACE
