@@ -21,3 +21,10 @@ Subcommand `chroot`, will change rootfs to working directory and combine the ima
 And then commit as a new layer.
 
 Finally, push back to docker registry. Each steps you are working on are only modifying the working directory and basing the image which you pulled at first and storing at `.ketos`.
+
+
+## 步骤
+
+1. parse dockerfile ，将每一条解析成一个cmd
+2. 使用linux的一些命令，主要是namespace，chroot 简单组装出一个容器环境，这个环境要可以运行第一步中解析出的cmd
+3. 将working container commit成一个镜像， 镜像应该是可以用`docker images`读取的
