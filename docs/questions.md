@@ -23,3 +23,9 @@ questions need to be dig deeper
 	* [write yourself an strace in 70 lines of code](https://blog.nelhage.com/2010/08/write-yourself-an-strace-in-70-lines-of-code/)
 	* [brief comparison between ptrace and `LD_PRELOAD`](https://fakeroot-ng.lingnu.com/index.php/Home_Page#Technical_differences_between_Fakeroot_and_Fakeroot-ng)
 	* projects comparison fakeroot-ng vs fakeroot and fakechroot vs proot
+
+* When docker image format will be replaced by OCI image format.
+* How does `docker create` mount docker image and create a container.
+* Some combination of outer docker daemon storage driver and inner storage driver [doesn't work](https://goo.gl/cjKAUs), research the reason. The storage driver compatible matrix is [here](https://goo.gl/Me7EFF), and other information for choosing storage driver on the same page.
+
+* Some guys said glibc can't be statically linked. dig the reason
