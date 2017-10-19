@@ -23,6 +23,8 @@ questions need to be dig deeper
 	* [write yourself an strace in 70 lines of code](https://blog.nelhage.com/2010/08/write-yourself-an-strace-in-70-lines-of-code/)
 	* [brief comparison between ptrace and `LD_PRELOAD`](https://fakeroot-ng.lingnu.com/index.php/Home_Page#Technical_differences_between_Fakeroot_and_Fakeroot-ng)
 	* projects comparison fakeroot-ng vs fakeroot and fakechroot vs proot
+	* ptrace syscall leaks some security problems. see CVE-2014-4699 and CVE-2016-5195 in [article](https://docs.docker.com/engine/security/non-events/).
+	* here is another [issue of seccomp with ptrace allowed](https://blog.lizzie.io/linux-containers-in-500-loc.html#fn.51)
 
 * When docker image format will be replaced by OCI image format.
 * How does `docker create` mount docker image and create a container.
