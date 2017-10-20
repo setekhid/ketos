@@ -26,8 +26,14 @@ questions need to be dig deeper
 	* ptrace syscall leaks some security problems. see CVE-2014-4699 and CVE-2016-5195 in [article](https://docs.docker.com/engine/security/non-events/).
 	* here is another [issue of seccomp with ptrace allowed](https://blog.lizzie.io/linux-containers-in-500-loc.html#fn.51)
 
+* How does `LD_PRELOAD` work.
+	* Will it work with golang `os/exec` pkg, yes.
+	* Is it under POSIX definition, no.
+	* more detail in ld.so man page.
+
 * When docker image format will be replaced by OCI image format.
 * How does `docker create` mount docker image and create a container.
 * Some combination of outer docker daemon storage driver and inner storage driver [doesn't work](https://goo.gl/cjKAUs), research the reason. The storage driver compatible matrix is [here](https://goo.gl/Me7EFF), and other information for choosing storage driver on the same page.
 
 * Some guys said glibc can't be statically linked. dig the reason
+	* Statically link libc will cause porting problem, if glibc is too big, uClibc or musl is a replicaing solution for some situation.

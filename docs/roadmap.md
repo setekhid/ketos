@@ -29,3 +29,7 @@ Download base image and publish derived image to registry:
 	* [docker/docker/builder/dockerfile/parser](https://github.com/moby/moby/tree/master/builder/dockerfile/parser)
 	* [grammarly/rocker/src/parser](https://github.com/grammarly/rocker/tree/master/src/parser)
 	* [jlhawn/dockramp/build/parser](https://github.com/jlhawn/dockramp/tree/master/build/parser)
+
+* It seems [vx32](github.com/0intro/vx32) is another chroot solution
+	* [here](github.com/majek/vx32example) is an example
+	* [paper](https://swtch.com/~rsc/papers/vx32-usenix2008.pdf) and [some talks](https://news.ycombinator.com/item?id=12620205)
