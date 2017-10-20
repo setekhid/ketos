@@ -11,6 +11,8 @@ questions need to be dig deeper
 	* https://github.com/appc/spec#-disclaimer-
 * When dig in, lots of languages using libc to affect with kernel, but golang not. see [my ask](https://goo.gl/S4KJse), and the talk at [Hacker News](https://goo.gl/bFysCw) and the [relative article](https://goo.gl/1XmwtC)
 	* Golang execution [design document](https://goo.gl/UY4vDB)
+	* the golang may wanna implement everything in golang, the runtime is in golang since 1.5 see [here](https://www.infoq.com/news/2015/08/go-1-5).
+		* dig deeper if the runtime of rust-lang implemented in c or rust, and is rust based syscall or libc.
 * Why need manage `/dev` folder when docker create a container.
 * A brief comparison between overlayfs and aufs, and the relationship to docker storage driver
 	* The differences between docker overlay and overlay2 storage driver
