@@ -2,6 +2,7 @@ package pull
 
 import (
 	"archive/tar"
+	"bytes"
 	"compress/gzip"
 	"encoding/json"
 	"fmt"
@@ -73,9 +74,24 @@ func pullV2(name, tag string) error {
 		}
 		defer contents.Close()
 		digest := l.Digest.Encoded()
+
+		cachePath := filepath.Join(ketosFolder, "layers", digest+".tar.gz")
 		layerPath := filepath.Join(ketosFolder, "layers", digest)
 
-		zippedLayerReader, err := gzip.NewReader(contents)
+		// cache
+		cacheFile, err := os.Create(cachePath)
+		if err != nil {
+			return errors.Wrap(err, "create cache file")
+		}
+		defer cacheFile.Close()
+		buff := &bytes.Buffer{}
+		tee := io.TeeReader(contents, buff)
+		_, err = io.Copy(cacheFile, tee)
+		if err != nil {
+			return errors.Wrap(err, "write down layer.tar.gz")
+		}
+
+		zippedLayerReader, err := gzip.NewReader(buff)
 		if err != nil {
 			return errors.Wrap(err, "open gzip reader")
 		}
