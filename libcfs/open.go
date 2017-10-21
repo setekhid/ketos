@@ -18,11 +18,11 @@ func open(path *C.char, flags C.int, mode C.int) C.int {
 	}
 	defer libc.Close()
 
-	var libc_open func(*C.char, C.int, C.int) C.int
+	var libc_open func(string, int, ...interface{}) int32
 	err = libc.Sym("open", &libc_open)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	return libc_open(path, flags, mode)
+	return C.int(libc_open(C.GoString(path), int(flags), mode))
 }
