@@ -5,6 +5,7 @@ import (
 	"github.com/setekhid/ketos/cmd/commit"
 	"github.com/setekhid/ketos/cmd/pull"
 	"github.com/setekhid/ketos/cmd/push"
+	"github.com/setekhid/ketos/cmd/version"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -15,6 +16,7 @@ func main() {
 		chroot.Command,
 		commit.Command,
 		push.Command,
+		version.Command,
 	)
 
 	err := Command.Execute()
