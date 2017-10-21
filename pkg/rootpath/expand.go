@@ -67,7 +67,3 @@ func ExpandPath(path string, ro bool) string {
 func expandRootfsPath(path string) string {
 	return path
 }
-
-func expandOverlayPath(path string) string {
-	return ""
-}
