@@ -2,14 +2,17 @@ package pull
 
 import (
 	"bytes"
-	"compress/gzip"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
 
 	_ "github.com/docker/distribution"
 	"github.com/setekhid/ketos/client"
 )
+
+var ()
 
 func pull(name, tag string) error {
 	// fetch manifest
@@ -33,18 +36,12 @@ func pull(name, tag string) error {
 		return err
 	}
 
-	maniDig, err := hub.ManifestDigest(name, tag)
-	if err != nil {
-		return err
-	}
-
 	fmt.Printf("%+v\n", manifest)
-	fmt.Printf("%+v\n", maniDig)
 
 	// fetch layers
 	layers := manifest.Layers
 	for _, l := range layers {
-		fmt.Printf("layer %v\n", l.Digest.Encoded())
+		fmt.Printf("download layer %v\n", l.Digest.Encoded())
 
 		contents, err := hub.DownloadLayer(name, l.Digest)
 		if err != nil {
@@ -52,16 +49,24 @@ func pull(name, tag string) error {
 		}
 		defer contents.Close()
 
-		fd, err := os.OpenFile(l.Digest.Encoded()+".tar", os.O_CREATE|os.O_WRONLY, os.ModePerm)
+		digest := l.Digest.Encoded()
+		tmpDir, err := ioutil.TempDir(".", digest)
+		if err != nil {
+			return err
+		}
+		gz := filepath.Join(tmpDir, digest)
+		fd, err := os.OpenFile(gz+".tar.gz", os.O_CREATE|os.O_WRONLY, 0600)
 		if err != nil {
 			return err
 		}
 		defer fd.Close()
+
 		buf := bytes.Buffer{}
 		buf.ReadFrom(contents)
-		tw := gzip.NewWriter(fd)
-		tw.Write(buf.Bytes())
-		//	fmt.Println(buf.String())
+		_, err = fd.Write(buf.Bytes())
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
