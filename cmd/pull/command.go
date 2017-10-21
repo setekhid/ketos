@@ -29,7 +29,7 @@ func pullMain(cmd *cobra.Command, args []string) error {
 	}
 
 	// fetch manifest, then get every layer
-	err = pullV1("library/"+name, tag)
+	err = pullV2("library/"+name, tag)
 	if err != nil {
 		fmt.Println(err)
 		return nil

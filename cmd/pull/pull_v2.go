@@ -1,20 +1,27 @@
 package pull
 
 import (
-	"bytes"
+	"archive/tar"
+	"compress/gzip"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 
 	_ "github.com/docker/distribution"
+	"github.com/pkg/errors"
 	"github.com/setekhid/ketos/client"
+	"github.com/setekhid/ketos/pkg/ketos/metadata"
 )
 
-var ()
-
 func pullV2(name, tag string) error {
+
+	ketosFolder, err := metadata.KetosFolder()
+	if err != nil {
+		return errors.Wrap(err, "get ketos folder")
+	}
+
 	// fetch manifest
 	hub, err := client.NewRegitry("", "", "")
 	if err != nil {
@@ -25,7 +32,7 @@ func pullV2(name, tag string) error {
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile("m.json", os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	f, err := os.Create(filepath.Join(ketosFolder, "tags", tag+".manifest"))
 	if err != nil {
 		return err
 	}
@@ -44,14 +51,16 @@ func pullV2(name, tag string) error {
 	}
 
 	fmt.Printf("config %+v\n", config)
-	cf, err := os.OpenFile(manifest.Config.Digest.Encoded()+".json", os.O_CREATE|os.O_WRONLY, 0600)
+	cf, err := os.Create(filepath.Join(ketosFolder, "layers", manifest.Config.Digest.Encoded()+".json"))
 	if err != nil {
 		return err
 	}
 	defer cf.Close()
-	buf1 := bytes.Buffer{}
-	buf1.ReadFrom(config)
-	cf.Write(buf1.Bytes())
+
+	_, err = io.Copy(cf, config)
+	if err != nil {
+		return errors.Wrap(err, "write down config layer")
+	}
 
 	// fetch layers
 	layers := manifest.Layers
@@ -63,24 +72,49 @@ func pullV2(name, tag string) error {
 			return err
 		}
 		defer contents.Close()
-
 		digest := l.Digest.Encoded()
-		tmpDir, err := ioutil.TempDir(".", digest)
-		if err != nil {
-			return err
-		}
-		gz := filepath.Join(tmpDir, digest)
-		fd, err := os.OpenFile(gz+".tar.gz", os.O_CREATE|os.O_WRONLY, 0600)
-		if err != nil {
-			return err
-		}
-		defer fd.Close()
+		layerPath := filepath.Join(ketosFolder, "layers", digest)
 
-		buf := bytes.Buffer{}
-		buf.ReadFrom(contents)
-		_, err = fd.Write(buf.Bytes())
+		zippedLayerReader, err := gzip.NewReader(contents)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "open gzip reader")
+		}
+		layerReader := tar.NewReader(zippedLayerReader)
+		for {
+
+			fileHdr, err := layerReader.Next()
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				return errors.Wrap(err, "untar layer")
+			}
+
+			fileName := filepath.Join(layerPath, fileHdr.Name)
+			if fileHdr.FileInfo().IsDir() {
+
+				err = os.MkdirAll(fileName, os.ModePerm)
+				if err != nil {
+					return errors.Wrap(err, "make layer file dir tree")
+				}
+			} else {
+
+				err = func() error {
+					file, err := os.Create(fileName)
+					if err != nil {
+						return errors.Wrap(err, "create layer files")
+					}
+					defer file.Close()
+
+					_, err = io.Copy(file, layerReader)
+					if err != nil {
+						return errors.Wrap(err, "write down layer files")
+					}
+					return nil
+				}()
+				if err != nil {
+					return err
+				}
+			}
 		}
 	}
 

@@ -4,4 +4,4 @@ ADD ./demo1.txt /usr/share/nginx/html/
 RUN echo "this content is from command echo" \
 		> /usr/share/nginx/html/demo2.txt
 
-RUN apt-get update && apt-get install -y ltrace
+# RUN apt-get update && apt-get install -y ltrace
