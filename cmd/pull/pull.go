@@ -12,8 +12,6 @@ import (
 	"github.com/setekhid/ketos/client"
 )
 
-var ()
-
 func pull(name, tag string) error {
 	// fetch manifest
 	hub, err := client.NewRegitry("", "", "")

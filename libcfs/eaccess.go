@@ -8,7 +8,7 @@ import (
 import "C"
 
 //export eaccess
-func eaccess(path *C.char, mode C.int) C.int {
+func eaccess(path *C.char, mode C.int) *C.int {
 
 	path = expandPathName(path)
 
@@ -18,7 +18,7 @@ func eaccess(path *C.char, mode C.int) C.int {
 	}
 	defer libc.Close()
 
-	var libc_eaccess func(*C.char, C.int) C.int
+	var libc_eaccess func(*C.char, C.int) *C.int
 	err = libc.Sym("eaccess", &libc_eaccess)
 	if err != nil {
 		log.Fatalln(err)

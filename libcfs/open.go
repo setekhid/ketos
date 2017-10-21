@@ -8,7 +8,7 @@ import (
 import "C"
 
 //export open
-func open(path *C.char, flags C.int, mode C.int) C.int {
+func open(path *C.char, flags C.int, mode *C.int) *C.int {
 
 	path = expandPathName(path)
 
@@ -18,11 +18,11 @@ func open(path *C.char, flags C.int, mode C.int) C.int {
 	}
 	defer libc.Close()
 
-	var libc_open func(string, int, ...interface{}) int32
+	var libc_open func(*C.char, C.int, *C.int) *C.int
 	err = libc.Sym("open", &libc_open)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	return C.int(libc_open(C.GoString(path), int(flags), mode))
+	return libc_open(path, flags, mode)
 }
