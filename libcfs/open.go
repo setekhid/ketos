@@ -3,14 +3,16 @@ package main
 import (
 	"github.com/rainycape/dl"
 	"log"
+	"os"
 )
 
 import "C"
 
 //export open
-func open(path *C.char, flags C.int, mode *C.int) *C.int {
+func open(path *C.char, flags C.uint, mode C.int) *C.int {
 
-	path = expandPathName(path)
+	ro := flags&C.uint(os.O_WRONLY|os.O_RDWR|os.O_APPEND|os.O_CREATE) == 0
+	path = expandPathName(path, ro)
 
 	libc, err := dl.Open("libc", 0)
 	if err != nil {
@@ -18,7 +20,7 @@ func open(path *C.char, flags C.int, mode *C.int) *C.int {
 	}
 	defer libc.Close()
 
-	var libc_open func(*C.char, C.int, *C.int) *C.int
+	var libc_open func(*C.char, C.uint, C.int) *C.int
 	err = libc.Sym("open", &libc_open)
 	if err != nil {
 		log.Fatalln(err)

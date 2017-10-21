@@ -10,7 +10,7 @@ import "C"
 //export eaccess
 func eaccess(path *C.char, mode C.int) *C.int {
 
-	path = expandPathName(path)
+	path = expandPathName(path, false)
 
 	libc, err := dl.Open("libc", 0)
 	if err != nil {

@@ -6,10 +6,10 @@ import (
 
 import "C"
 
-func expandPathName(pathNameC *C.char) *C.char {
+func expandPathName(pathNameC *C.char, ro bool) *C.char {
 
 	pathNameG := C.GoString(pathNameC)
-	pathNameG = rootpath.ExpandPath(pathNameG)
+	pathNameG = rootpath.ExpandPath(pathNameG, ro)
 	pathNameC = C.CString(pathNameG)
 
 	return pathNameC

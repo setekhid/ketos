@@ -1,6 +1,8 @@
 package rootpath
 
 import (
+	"io"
+	"os"
 	"path/filepath"
 )
 
@@ -16,14 +18,56 @@ import (
  *  +- asset_file.txt
  */
 
-func ExpandPath(path string) string {
+func ExpandPath(path string, ro bool) string {
 
-	// Simple combine
-	if !KetosChrootWD {
-		return KetosChrootRoot + string(filepath.Separator) + path
+	// check the top layer contains
+	topLayer := KetosChrootRoot + string(filepath.Separator) + path
+	_, err := os.Stat(topLayer)
+	if err == nil || !os.IsNotExist(err) {
+		return topLayer
 	}
 
-	// combine with overlay
+	// seeking lower layer path
+	lowerLayer := path
+	if !KetosChrootWD {
+		lowerLayer = expandRootfsPath(path)
+	} else {
+		lowerLayer = expandOverlayPath(path)
+	}
 
+	// readonly
+	if ro {
+		return lowerLayer
+	}
+
+	// may write
+
+	// write to top layer directory, or doesn't exist
+	info, err := os.Stat(lowerLayer)
+	if err != nil || info.IsDir() {
+		return topLayer
+	}
+
+	// copy regular file
+	lowerLayerFile, err := os.Open(lowerLayer)
+	if err != nil {
+		return topLayer
+	}
+	defer lowerLayerFile.Close()
+	topLayerFile, err := os.Create(topLayer)
+	if err != nil {
+		return topLayer
+	}
+	defer topLayerFile.Close()
+
+	io.Copy(topLayerFile, lowerLayerFile)
+	return topLayer
+}
+
+func expandRootfsPath(path string) string {
+	return path
+}
+
+func expandOverlayPath(path string) string {
 	return ""
 }
