@@ -11,9 +11,16 @@ var (
 	testImageTag  = "latest"
 )
 
-func TestPull(t *testing.T) {
+func TestPullV2(t *testing.T) {
 	assert := assert.New(t)
 
-	err := pull(testImageName, testImageTag)
+	err := pullV2(testImageName, testImageTag)
+	assert.NoError(err)
+}
+
+func TestPullV1(t *testing.T) {
+	assert := assert.New(t)
+
+	err := pullV1(testImageName, testImageTag)
 	assert.NoError(err)
 }

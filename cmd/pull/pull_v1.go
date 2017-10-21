@@ -12,18 +12,20 @@ import (
 	"github.com/setekhid/ketos/client"
 )
 
-func pull(name, tag string) error {
+var ()
+
+func pullV1(name, tag string) error {
 	// fetch manifest
 	hub, err := client.NewRegitry("", "", "")
 	if err != nil {
 		return err
 	}
 
-	manifest, err := hub.ManifestV2(name, tag)
+	manifest, err := hub.Manifest(name, tag)
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile("m.json", os.O_CREATE|os.O_WRONLY, os.ModePerm)
+	f, err := os.OpenFile("m1.json", os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		return err
 	}
@@ -37,17 +39,17 @@ func pull(name, tag string) error {
 	fmt.Printf("%+v\n", manifest)
 
 	// fetch layers
-	layers := manifest.Layers
+	layers := manifest.FSLayers
 	for _, l := range layers {
-		fmt.Printf("download layer %v\n", l.Digest.Encoded())
+		fmt.Printf("download layer %v\n", l.BlobSum.Encoded())
 
-		contents, err := hub.DownloadLayer(name, l.Digest)
+		contents, err := hub.DownloadLayer(name, l.BlobSum)
 		if err != nil {
 			return err
 		}
 		defer contents.Close()
 
-		digest := l.Digest.Encoded()
+		digest := l.BlobSum.Encoded()
 		tmpDir, err := ioutil.TempDir(".", digest)
 		if err != nil {
 			return err
