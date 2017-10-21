@@ -1,0 +1,20 @@
+#include <stdarg.h>
+#include <fcntl.h>
+
+
+extern int cgo_open(const char *pathname, int flags, int mode);
+
+extern int open(const char *pathname, int flags, ...) {
+
+	int mode = 0;
+
+	va_list arg;
+	va_start(arg, flags);
+
+	if (flags & O_CREAT) {
+		mode = va_arg(arg, int);
+		va_end(arg);
+	}
+
+	return cgo_open(pathname, flags, mode);
+}
