@@ -2,12 +2,11 @@ package main
 
 import (
 	"github.com/setekhid/ketos/cmd/chroot"
+	"github.com/setekhid/ketos/cmd/commit"
 	"github.com/setekhid/ketos/cmd/pull"
 	"github.com/setekhid/ketos/cmd/push"
-	"github.com/setekhid/ketos/cmd/commit"
 	log "github.com/sirupsen/logrus"
 )
-
 
 func main() {
 

@@ -5,11 +5,11 @@ import (
 )
 
 var (
-	Command = &cobra.Command {
-		Use: "xcb",
+	Command = &cobra.Command{
+		Use:     "xcb",
 		Aliases: []string{"xcbuild"},
-		Short: "cross container builder",
-		RunE: xcb_main,
+		Short:   "cross container builder",
+		RunE:    xcb_main,
 	}
 )
 

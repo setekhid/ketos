@@ -5,10 +5,10 @@ import (
 )
 
 var (
-	Command = &cobra.Command {
-		Use: "push",
+	Command = &cobra.Command{
+		Use:   "push",
 		Short: "push current image to registry",
-		RunE: push_main,
+		RunE:  push_main,
 	}
 )
 

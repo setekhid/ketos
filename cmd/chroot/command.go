@@ -5,11 +5,11 @@ import (
 )
 
 var (
-	Command = &cobra.Command {
-		Use: "chroot",
+	Command = &cobra.Command{
+		Use:     "chroot",
 		Aliases: []string{"chr"},
-		Short: "change to image base as root fs",
-		RunE: chroot_main,
+		Short:   "change to image base as root fs",
+		RunE:    chroot_main,
 	}
 )
 

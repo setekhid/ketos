@@ -5,10 +5,10 @@ import (
 )
 
 var (
-	Command = &cobra.Command {
-		Use: "commit",
+	Command = &cobra.Command{
+		Use:   "commit",
 		Short: "commit current working tree to a layer of image",
-		RunE: commit_main,
+		RunE:  commit_main,
 	}
 )
 

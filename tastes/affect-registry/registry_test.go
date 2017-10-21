@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	url = "http://registry-1.docker.io/"
+	url      = "http://registry-1.docker.io/"
 	username = ""
 	password = ""
 )
