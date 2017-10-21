@@ -2,6 +2,7 @@ package chroot
 
 import (
 	"github.com/pkg/errors"
+	"github.com/setekhid/ketos/pkg/ketos/metadata"
 	"io"
 	"os/exec"
 	"path/filepath"
@@ -25,7 +26,13 @@ func NewEngineByName(name string) (Engine, error) {
 }
 
 func SeekKetosRoot(from string) (string, error) {
-	return filepath.Abs(from)
+
+	ketosFolder, err := metadata.SeekKetosFolder(from)
+	if err != nil {
+		return "", errors.Wrap(err, "get ketos folder")
+	}
+
+	return filepath.Dir(ketosFolder), nil
 }
 
 type ldEngine struct {

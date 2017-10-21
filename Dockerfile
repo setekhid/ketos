@@ -7,9 +7,9 @@ ADD . /go/src/github.com/setekhid/ketos
 RUN export GOPATH=/go && \
 	( \
 		cd $GOPATH/src/github.com/setekhid/ketos/libcfs && \
-		go build -buildmode=c-shared -o /libketos-chroot.so *.go \
+		go build -buildmode=c-shared -o /usr/local/lib/libketos-chroot.so *.go \
 	) && \
 	( \
 		cd $GOPATH/src/github.com/setekhid/ketos && \
-		make \
+		make build && make install \
 	)
