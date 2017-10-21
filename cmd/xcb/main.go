@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/setekhid/ketos/cmd/chroot"
 	"github.com/setekhid/ketos/cmd/commit"
+	"github.com/setekhid/ketos/cmd/image"
 	"github.com/setekhid/ketos/cmd/pull"
 	"github.com/setekhid/ketos/cmd/push"
 	"github.com/setekhid/ketos/cmd/version"
@@ -17,6 +18,7 @@ func main() {
 		commit.Command,
 		push.Command,
 		version.Command,
+		image.Command,
 	)
 
 	err := Command.Execute()

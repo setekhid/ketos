@@ -10,8 +10,8 @@ import (
 var (
 	Command = &cobra.Command{
 		Use:   "pull",
-		Short: "pull down image from registry",
-		RunE:  pull_main,
+		Short: "pull down image from registry, only support pull from docker.io",
+		RunE:  pullMain,
 	}
 )
 
@@ -21,7 +21,7 @@ func init() {
 
 }
 
-func pull_main(cmd *cobra.Command, args []string) error {
+func pullMain(cmd *cobra.Command, args []string) error {
 	name, tag, err := validRef(args[0])
 	if err != nil {
 		fmt.Println(err)
@@ -29,13 +29,24 @@ func pull_main(cmd *cobra.Command, args []string) error {
 	}
 
 	// fetch manifest, then get every layer
+	err = pull("library/"+name, tag)
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	fmt.Printf("%s download successfull\n", args[0])
 	return nil
 }
 
 func validRef(ref string) (string, string, error) {
+	idx := strings.LastIndex(ref, "/")
+	if idx != -1 {
+		ref = string([]byte(ref)[idx+1:])
+	}
 	repo := strings.Split(ref, ":")
 	if len(repo) > 2 {
-		return "", "", fmt.Errorf("image format error, should be \"name:tag\"")
+		return "", "", fmt.Errorf("image format error, should be \"registry/lib/name:tag\"")
 	}
 
 	if len(repo) == 2 {

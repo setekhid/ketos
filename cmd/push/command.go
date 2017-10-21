@@ -1,6 +1,8 @@
 package push
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 )
 
@@ -8,17 +10,19 @@ var (
 	Command = &cobra.Command{
 		Use:   "push",
 		Short: "push current image to registry",
-		RunE:  push_main,
+		RunE:  pushMain,
 	}
 )
 
-func init() {
+func pushMain(cmd *cobra.Command, args []string) error {
+	if len(args) < 1 {
+		fmt.Println("image name:tag should be provide")
+		return nil
+	}
 
-	// TODO flags
+	return nil
 }
 
-func push_main(cmd *cobra.Command, args []string) error {
+func parseRef(ref string) {
 
-	// TODO
-	return nil
 }

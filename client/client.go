@@ -1,10 +1,6 @@
 package client
 
-import (
-	"fmt"
-
-	hreg "github.com/heroku/docker-registry-client"
-)
+import hreg "github.com/heroku/docker-registry-client/registry"
 
 var (
 	defaultRegistry = "https://registry-1.docker.io/"
@@ -25,9 +21,9 @@ func NewRegitry(registry, name, passwd string) (*hreg.Registry, error) {
 		passwd = defaultPasswd
 	}
 
-	hub, err := hreg.New(url, name, passwd)
+	hub, err := hreg.New(registry, name, passwd)
 	if err != nil {
-		return nil, fmt.Errorf("fail to new hub %s", err)
+		return nil, err
 	}
 
 	return hub, err

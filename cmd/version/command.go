@@ -21,7 +21,7 @@ var (
 )
 
 func versionMain(cmd *cobra.Command, args []string) error {
-	fmt.Printf("Version: %-10s\nCommit: %-10s\n", Version, Commit)
+	fmt.Printf("Version: %10s\nCommit: %10s\n", Version, Commit)
 
 	return nil
 }
