@@ -38,7 +38,7 @@ func (e ldEngine) Run(root string, imageTag string, cmd []string,
 	exe := exec.Command(cmd[0], cmd[1:]...)
 	exe.Env = append(exe.Env,
 		"LD_PRELOAD="+e.ldPreload,
-		"KETOS_CHROOT_OVERLAY=TRUE",
+		"KETOS_CHROOT_WD=TRUE",
 		"KETOS_CHROOT_ROOT="+root,
 		"KETOS_CHROOT_IMGTAG="+imageTag,
 	)

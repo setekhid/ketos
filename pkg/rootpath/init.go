@@ -6,15 +6,15 @@ import (
 )
 
 var (
-	KetosChrootOverlay = IsOverlayRoot()
-	KetosChrootRoot    = ChrootDirectory()
-	KetosChrootImgTag  = ChrootImageTag()
+	KetosChrootWD     = IsChrootWorkingDir()
+	KetosChrootRoot   = ChrootDirectory()
+	KetosChrootImgTag = ChrootImageTag()
 )
 
-func IsOverlayRoot() bool {
+func IsChrootWorkingDir() bool {
 
 	isOverlay := false
-	overlayEnv := strings.ToLower(os.Getenv("KETOS_CHROOT_OVERLAY"))
+	overlayEnv := strings.ToLower(os.Getenv("KETOS_CHROOT_WD"))
 	if overlayEnv == "true" || overlayEnv == "t" ||
 		overlayEnv == "yes" || overlayEnv == "y" ||
 		overlayEnv == "1" {

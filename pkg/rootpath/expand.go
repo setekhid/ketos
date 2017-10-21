@@ -19,7 +19,7 @@ import (
 func ExpandPath(path string) string {
 
 	// Simple combine
-	if !KetosChrootOverlay {
+	if !KetosChrootWD {
 		return KetosChrootRoot + string(filepath.Separator) + path
 	}
 
