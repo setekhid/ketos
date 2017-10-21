@@ -1,7 +1,9 @@
 package pull
 
 import (
-	"errors"
+	"fmt"
+	"strings"
+
 	"github.com/spf13/cobra"
 )
 
@@ -15,20 +17,30 @@ var (
 
 func init() {
 
-	flags := Command.Flags()
-	flags.StringP("demo-flag", "D", "demo", "demo flag")
+	// flags for pull command
 
-	// TODO flags
 }
 
 func pull_main(cmd *cobra.Command, args []string) error {
-
-	demo_value, err := cmd.Flags().GetString("demo-flag")
+	name, tag, err := validRef(args[0])
 	if err != nil {
-		return errors.New("didn't find demo-flag")
+		fmt.Println(err)
+		return err
 	}
-	_ = demo_value
 
-	// TODO
+	// fetch manifest, then get every layer
 	return nil
+}
+
+func validRef(ref string) (string, string, error) {
+	repo := strings.Split(ref, ":")
+	if len(repo) > 2 {
+		return "", "", fmt.Errorf("image format error, should be \"name:tag\"")
+	}
+
+	if len(repo) == 2 {
+		return repo[0], repo[1], nil
+	}
+
+	return repo[0], "", nil
 }
