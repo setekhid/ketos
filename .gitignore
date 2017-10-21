@@ -1,3 +1,5 @@
 xcb
-*.swp
-.swo
+.*.sw?
+/.ketos
+.DS_Store
+._*
