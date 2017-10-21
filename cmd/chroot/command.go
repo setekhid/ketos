@@ -11,7 +11,6 @@ var (
 		Use:     "chroot",
 		Aliases: []string{"chr"},
 		Short:   "change to image base as root fs",
-		Args:    cobra.MinimumNArgs(1),
 		RunE:    chrootMain,
 	}
 )
