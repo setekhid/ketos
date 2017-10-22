@@ -1,21 +1,21 @@
 # Cross Container Builder (xcbuild)
 
-A project for Hackathon 2017 at Shanghai.
+[![GoDoc](https://godoc.org/github.com/setekhid/ketos?status.svg)](https://godoc.org/github.com/setekhid/ketos) [![Go Report Card](https://goreportcard.com/badge/github.com/setekhid/ketos)](https://goreportcard.com/report/github.com/setekhid/ketos)
 
-Utilities to seperate the whole `docker build` and provide subcommands to be better integrated with CI platform.
+A tasting project for Go Hackathon 2017 Shanghai.
 
-## Prototype
+This project aims to help you building a docker image in CI platform better.
 
-* Implement the functions RUN, ADD/COPY and ENV from original dockerfile commands.
-* Integrate with docker registry, push and pull down docker images.
+## Hackathon Team
 
-## Authors
+```
+Ace-Tang   (github.com/ace-tang) <aceapril@126.com>
+Huitse Tai (github.com/setekhid) <geb.1989@gmail.com>
+```
 
-* Ace-Tang   github.com/ace-tang <aceapril@126.com>
-* Huitse Tai github.com/setekhid <geb.1989@gmail.com>
-
-## Installation
+## Building & Usage
 
 ```bash
-go get github.com/setekhid/ketos/cmd/xcb
+docker build -t setekhid/ketos:latest .
+docker run -it --rm  setekhid/ketos:latest xcb help
 ```
