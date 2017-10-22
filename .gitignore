@@ -1,5 +1,15 @@
-xcb
-.*.sw?
-/.ketos
+# apple nonsense
 .DS_Store
 ._*
+
+# xcbuild binary
+xcb
+
+# vim
+.*.sw?
+
+# local test
+/.ketos/
+
+# exclude golang vendor
+/vendor/
