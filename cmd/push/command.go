@@ -44,7 +44,7 @@ func pushMain(cmd *cobra.Command, args []string) error {
 	defaultTagDir = filepath.Join(ketosFolder, "tags")
 	defaultlLayer = filepath.Join(ketosFolder, "layers")
 
-	name = filepath.Join(defaultRegistry, name)
+	//name = filepath.Join(defaultRegistry, name)
 	err = push(name, tag)
 	if err != nil {
 		return err
@@ -55,14 +55,11 @@ func pushMain(cmd *cobra.Command, args []string) error {
 }
 
 func parseRef(ref string) (string, string, error) {
-	repo := strings.Split(ref, ":")
-	if len(repo) > 2 {
+
+	sepInd := strings.LastIndex(ref, ":")
+	if sepInd < 0 {
 		return "", "", fmt.Errorf("%s format error", ref)
 	}
 
-	if len(repo) == 2 {
-		return repo[0], repo[1], nil
-	}
-
-	return repo[0], "latest", nil
+	return ref[:sepInd], ref[sepInd+1:], nil
 }

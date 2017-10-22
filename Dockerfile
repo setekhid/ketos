@@ -3,6 +3,7 @@ RUN yum install -y golang build-essential make && \
 	mkdir -p /go/src
 
 ADD . /go/src/github.com/setekhid/ketos
+ADD ./bin/keto.sh /
 
 RUN export GOPATH=/go && \
 	( \

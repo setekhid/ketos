@@ -12,7 +12,7 @@ import (
 )
 
 func push(name, tag string) error {
-	hub, err := client.NewRegitry("http://127.0.0.1/", "", "")
+	hub, err := client.NewRegitry("http://registry:5000/", "", "")
 	if err != nil {
 		return err
 	}
