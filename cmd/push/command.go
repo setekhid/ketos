@@ -2,15 +2,17 @@ package push
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
+	"github.com/setekhid/ketos/pkg/ketos/metadata"
 	"github.com/spf13/cobra"
 )
 
 var (
 	defaultRegistry = "127.0.0.1:5000"
-	defaultDir      = ".ketos/tags"
-	defaultlLayer   = ".ketos/layers"
+	defaultTagDir   = ""
+	defaultlLayer   = ""
 )
 
 var (
@@ -27,12 +29,22 @@ func pushMain(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	ketosFolder, err := metadata.KetosFolder()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
 	name, tag, err := parseRef(args[0])
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
+	defaultTagDir = filepath.Join(ketosFolder, "tags")
+	defaultlLayer = filepath.Join(ketosFolder, "layers")
+
+	name = filepath.Join(defaultRegistry, name)
 	err = push(name, tag)
 	if err != nil {
 		return err

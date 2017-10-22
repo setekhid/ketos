@@ -12,12 +12,12 @@ import (
 )
 
 func push(name, tag string) error {
-	hub, err := client.NewRegitry("127.0.0.1", "", "")
+	hub, err := client.NewRegitry("http://127.0.0.1/", "", "")
 	if err != nil {
 		return err
 	}
 
-	manifest, err := marshalManifest(defaultDir)
+	manifest, err := marshalManifest(defaultTagDir, tag)
 	if err != nil {
 		return err
 	}
@@ -72,8 +72,8 @@ func getLayer(layer string) bool {
 	return false
 }
 
-func marshalManifest(baseDir string) (*manifestV2.DeserializedManifest, error) {
-	path := filepath.Join(baseDir, "manifest.json")
+func marshalManifest(tagDir, tag string) (*manifestV2.DeserializedManifest, error) {
+	path := filepath.Join(tagDir, tag+".manifest")
 	fm, err := os.Open(path)
 	if err != nil {
 		return nil, err
