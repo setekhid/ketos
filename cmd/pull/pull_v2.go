@@ -12,8 +12,8 @@ import (
 
 	_ "github.com/docker/distribution"
 	"github.com/pkg/errors"
-	"github.com/setekhid/ketos/client"
 	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	client "github.com/setekhid/ketos/pkg/registry"
 )
 
 func pullV2(name, tag string) error {

@@ -58,6 +58,6 @@ func (e ldEngine) Run(root string, imageTag string, cmd []string,
 
 func newLDEngine() Engine {
 	return ldEngine{
-		ldPreload: "/usr/local/lib/libketos-chroot.so",
+		ldPreload: "/opt/ketos/libketos-hookroot.so",
 	}
 }

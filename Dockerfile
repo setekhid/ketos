@@ -10,7 +10,7 @@ ENV PATH=${PATH}:${GOPATH}/bin
 
 COPY ./Gopkg.lock ./Gopkg.toml /go/src/github.com/setekhid/ketos/
 RUN cd /go/src/github.com/setekhid/ketos && \
-	dep ensure -vendor-only && mkdir -p /opt/ketos
+	(dep ensure -vendor-only || true) && mkdir -p /opt/ketos
 
 ARG VERSION=0.1.0
 

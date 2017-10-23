@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 
 	_ "github.com/docker/distribution"
-	"github.com/setekhid/ketos/client"
+	client "github.com/setekhid/ketos/pkg/registry"
 )
 
 func pullV1(name, tag string) error {

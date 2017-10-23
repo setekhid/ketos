@@ -1,4 +1,4 @@
-package client
+package registry
 
 import hreg "github.com/heroku/docker-registry-client/registry"
 

@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 
 	manifestV2 "github.com/docker/distribution/manifest/schema2"
-	"github.com/setekhid/ketos/client"
+	client "github.com/setekhid/ketos/pkg/registry"
 )
 
 func push(name, tag string) error {
