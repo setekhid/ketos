@@ -1,5 +1,5 @@
 hash: 8370f25ee85c5d57891108ac4bd9a6bbe053af71b423b9d4491132f343eb9f7c
-updated: 2017-10-23T01:11:35.153916019+08:00
+updated: 2017-10-23T16:06:22.35881235+08:00
 imports:
 - name: github.com/docker/distribution
   version: 7484e51bf6af0d3b1a849644cdaced3cfcf13617
@@ -28,7 +28,7 @@ imports:
 - name: github.com/spf13/cobra
   version: 7b2c5ac9fc04fc5efafb60700713d4fa609b777b
 - name: github.com/spf13/pflag
-  version: 5644820622454e71517561946e3d94b9f9db6842
+  version: 97afa5e7ca8a08a383cb259e06636b5e2cc7897f
 - name: golang.org/x/crypto
   version: edd5e9b0879d13ee6970a50153d85b8fec9f7686
   subpackages:

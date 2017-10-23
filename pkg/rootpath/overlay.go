@@ -32,7 +32,7 @@ func expandOverlayPath(path string) string {
 	for i := len(manifest.Layers) - 1; i >= 0; i-- {
 
 		layer := manifest.Layers[i]
-		digest := layer.Digest.Encoded()
+		digest := layer.Digest.Hex()
 		layerPath := filepath.Join(ketosFolder, "layers", digest)
 		layerFilePath := filepath.Join(layerPath, path)
 
