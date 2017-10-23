@@ -1,0 +1,19 @@
+h1, h2, h3, h4, h5, h6, ul, p {
+    background-color: white;
+}
+
+.impress-supported .fallback-message {
+    display: none;
+}
+
+.step {
+    width: 900px;
+    height: 600px;
+    padding: 40px;
+
+    border: 1px solid rgba(0, 0, 0, .3);
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1);
+
+    font-size: 30px;
+}

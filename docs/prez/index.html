@@ -1,0 +1,144 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>Cross Container Builder</title>
+    <link href="css/prez.css" rel="stylesheet"/>
+</head>
+
+<body class="impress-not-supported">
+
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified
+        version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="impress">
+
+    <div class="step" data-x="0", data-y="0">
+        <h1>xcbuild</h1>
+        <p>Cross container building utilities.</p>
+        <p>&#x1f389;Go Hackathon 2017 Shanghai&#x1f389;<br />
+            &nbsp;&nbsp;Made by Huitse Tai &amp; Ace Tang</p>
+    </div>
+
+    <div class="step" data-x="1000" data-y="0">
+        <h1>What's this?</h1>
+        <ul>
+            <li>
+                <h3>A toolset which aim to replace docker build in CI.</h3>
+            </li>
+            <li>
+                <h3>First, it can pull docker image.</h3>
+            </li>
+            <li>
+                <h3>Second, it can generate top layer for a new image.</h3>
+            </li>
+            <li>
+                <h3>Third, it can commit to generate a new image.</h3>
+            </li>
+            <li>
+                <h3>And push back to registry.</h3>
+            </li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="2000" data-y="0">
+        <h1>Why?</h1>
+        <ul>
+            <li>
+                <h3>Digging deeper what does docker build do:</h3>
+                <ul>
+                    <li><h4>Pull down image.</h4></li>
+                    <li><h4>Add asset files or use some command to generate some.</h4></li>
+                    <li><h4>Tar the whole static folder to an image layer.</h4></li>
+                </ul>
+            </li>
+            <li>
+                <h3>I though docker daemon is so heavy for CI.</h3>
+            </li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="3000" data-y="0">
+        <h1>...and more reasons</h1>
+        <ul>
+            <li><h3>docker build is a monolithic command, it does everything in one command.</h3></li>
+            <li><h3>docker build is not design for CI integration, will make user confortable but will make CI platform integrating work much more trouble.</h3>
+                <ul>
+                    <li><h4>Like, if you peek into how does registry work, can we parallel generate each image layer which are not depending each other?!</h4></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="4000" data-y="0">
+        <h1>Prototype Tasting</h1>
+        <pre><code># start tasting environment
+docker-compose up --build -d
+docker exec -it ketos_ketos_1
+# begin
+mkdir -p /taste/.ketos/{layers,tags}
+cd /taste
+xcb pull alpine:3.6
+echo "this is a static asset file" \
+    > ./blabla_little_magical_spirit
+xcb chroot --tag 3.6 -- \
+    bach -c 'echo wizr is watching this > /hello.txt'
+xcb commit --tag 3.6
+xcb push</code></pre>
+    </div>
+
+    <div class="step" data-x="5000" data-y="0">
+        <h1>The Core</h1>
+        <ul>
+            <li><h3>Integration with docker registry</h3>
+                <ul>
+                    <li>thanks to the design of docker registry service, we can do more.</li>
+                </ul>
+            </li>
+            <li><h3>Imitate a fake rootfs</h3>
+                <ul>
+                    <li>LD_PRELOAD to hook into libc calling</li>
+                    <li>ptrace with SYS_PTRACE cap, may cause some kernel bugs, bug theoretically it's safe</li>
+                    <li>chroot, a long history</li>
+                    <li>runc, huge and so suitable for CI</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="6000" data-y="0">
+        <h1>libc hook</h1>
+        <ul>
+            <li>after digging some documents. golang's syscall design cause us a lot of trouble, but worth.</li>
+            <li>thanks to the mess of POSIX, the kernel interact is not as easy as we expected.</li>
+            <li><h3>but we made it!</h3></li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="7000" data-y="0">
+        <h1>some valuable features will be added</h1>
+        <ul>
+            <li><h3>keeping tearing down docker image push command</h3>
+                <ul>
+                    <li>for: parallel building each independent layer and combine to one</li>
+                </ul>
+            </li>
+            <li><h3>supporting more chroot replacing solution</h3></li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="8000" data-y="0">
+        <h1>thanks!</h1>
+    </div>
+
+</div>
+
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+
+</body>
+
+</html>
