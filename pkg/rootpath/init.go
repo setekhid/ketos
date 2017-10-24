@@ -6,41 +6,25 @@ import (
 )
 
 var (
-	KetosChrootWD     = IsChrootWorkingDir()
-	KetosChrootRoot   = ChrootDirectory()
-	KetosChrootImgTag = ChrootImageTag()
+	KetosChrootToImg  bool
+	KetosChrootDir    string
+	KetosChrootImgTag string
 )
 
-func IsChrootWorkingDir() bool {
+func init() {
 
-	isOverlay := false
-	overlayEnv := strings.ToLower(os.Getenv("KETOS_CHROOT_WD"))
-	if overlayEnv == "true" || overlayEnv == "t" ||
-		overlayEnv == "yes" || overlayEnv == "y" ||
-		overlayEnv == "1" {
+	toImageEnv := strings.ToLower(os.Getenv("KETOS_CHROOT_TOIMG"))
+	KetosChrootToImg = toImageEnv == "true" || toImageEnv == "t" ||
+		toImageEnv == "yes" || toImageEnv == "y" ||
+		toImageEnv == "1"
 
-		isOverlay = true
+	KetosChrootDir = os.Getenv("KETOS_CHROOT_DIR")
+	if len(KetosChrootDir) <= 0 {
+		KetosChrootDir = "/_ketos"
 	}
 
-	return isOverlay
-}
-
-func ChrootDirectory() string {
-
-	dir := os.Getenv("KETOS_CHROOT_ROOT")
-	if len(dir) <= 0 {
-		dir = "/"
+	KetosChrootImgTag = os.Getenv("KETOS_CHROOT_IMGTAG")
+	if len(KetosChrootImgTag) <= 0 {
+		KetosChrootImgTag = "latest"
 	}
-
-	return dir
-}
-
-func ChrootImageTag() string {
-
-	tag := os.Getenv("KETOS_CHROOT_IMGTAG")
-	if len(tag) <= 0 {
-		tag = "latest"
-	}
-
-	return tag
 }

@@ -15,23 +15,30 @@ func SeekKetosFolder(path string) (string, error) {
 
 	for {
 
-		_, err := os.Stat(filepath.Join(path, ".ketos"))
+		mayKetos := filepath.Join(path, ".ketos")
+		_, err := os.Stat(mayKetos)
 		if err == nil {
-			return filepath.Join(path, ".ketos"), nil
+			return mayKetos, nil
 		}
 
 		if !os.IsNotExist(err) {
 			return "", errors.Wrap(err, "open ketos metadata")
 		}
 
-		if path == "/" {
+		parent := filepath.Dir(path)
+		if path == parent {
 			return "", errors.New("didn't find metadata")
 		}
-
-		path = filepath.Dir(path)
+		path = parent
 	}
 }
 
 func KetosFolder() (string, error) {
-	return SeekKetosFolder("./")
+
+	wd, err := os.Getwd()
+	if err != nil {
+		return "", errors.Wrap(err, "get current working directory")
+	}
+
+	return SeekKetosFolder(wd)
 }

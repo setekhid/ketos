@@ -18,52 +18,60 @@ import (
  *  +- asset_file.txt
  */
 
-func ExpandPath(path string, ro bool) string {
+// ExpandPath expand the path to fake rootfs
+func ExpandPath(path string, ro bool) (string, error) {
 
 	// check the top layer contains
-	topLayer := KetosChrootRoot + string(filepath.Separator) + path
+	topLayer := KetosChrootDir + string(filepath.Separator) + path
 	_, err := os.Stat(topLayer)
 	if err == nil || !os.IsNotExist(err) {
-		return topLayer
+		return topLayer, err
 	}
 
 	// seeking lower layer path
 	lowerLayer := path
-	if !KetosChrootWD {
-		lowerLayer = expandRootfsPath(path)
-	} else {
-		lowerLayer = expandOverlayPath(path)
+	if KetosChrootToImg {
+		lowerLayer, err = expandOverlayPath(path)
+		if err != nil {
+			return "", err
+		}
+		if len(lowerLayer) <= 0 {
+			return topLayer, nil
+		}
 	}
 
 	// readonly
 	if ro {
-		return lowerLayer
+		return lowerLayer, nil
 	}
-
-	// may write
 
 	// write to top layer directory, or doesn't exist
 	info, err := os.Stat(lowerLayer)
-	if err != nil || info.IsDir() {
-		return topLayer
+	if err != nil {
+
+		if os.IsNotExist(err) {
+			return topLayer, nil
+		}
+
+		return "", err
+	}
+	if info.IsDir() {
+		return topLayer, os.MkdirAll(topLayer, os.ModePerm)
 	}
 
 	// copy regular file
 	lowerLayerFile, err := os.Open(lowerLayer)
 	if err != nil {
-		return topLayer
+		return "", err
 	}
 	defer lowerLayerFile.Close()
+
 	topLayerFile, err := os.Create(topLayer)
 	if err != nil {
-		return topLayer
+		return "", err
 	}
 	defer topLayerFile.Close()
 
-	io.Copy(topLayerFile, lowerLayerFile)
-	return topLayer
-}
-
-func expandRootfsPath(path string) string {
-	return path
+	_, err = io.Copy(topLayerFile, lowerLayerFile)
+	return topLayer, err
 }

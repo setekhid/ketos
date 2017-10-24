@@ -2,17 +2,30 @@ package main
 
 import (
 	"github.com/setekhid/ketos/pkg/rootpath"
+	"syscall"
 )
 
+// #include <errno.h>
+// void set_errno(int no) {
+//     errno = no;
+// }
 import "C"
 
-func expandPathName(pathNameC *C.char, ro bool) *C.char {
+// expand path to fake rootfs
+func expandPathName(pathNameC *C.char, ro bool) (string, error) {
 
 	pathNameG := C.GoString(pathNameC)
-	pathNameG = rootpath.ExpandPath(pathNameG, ro)
-	pathNameC = C.CString(pathNameG)
+	return rootpath.ExpandPath(pathNameG, ro)
+}
 
-	return pathNameC
+// set error number
+func setErrno(err error) {
+
+	if no, ok := err.(syscall.Errno); ok {
+		C.set_errno(C.int(no))
+	}
+
+	C.set_errno(C.int(syscall.EIO))
 }
 
 func main() {}
