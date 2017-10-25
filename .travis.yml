@@ -1,0 +1,12 @@
+language: go
+
+go:
+    - 1.8.x
+    - tip
+
+script:
+    - go get -t -v ./...
+    - go test -race -coverprofile=coverage.txt -convermode=atomic
+
+after_success:
+    - bash <(curl -s https://codecov.io/bash)

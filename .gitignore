@@ -2,8 +2,10 @@
 .DS_Store
 ._*
 
-# xcbuild binary
-xcb
+# xcbuild building results
+/xcb
+/libketos-hookroot.so
+/libketos-hookroot.h
 
 # vim
 .*.sw?

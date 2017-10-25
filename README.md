@@ -6,7 +6,7 @@
 
 # Cross Container Builder (xcbuild)
 
-[![GoDoc](https://godoc.org/github.com/setekhid/ketos?status.svg)](https://godoc.org/github.com/setekhid/ketos) [![Go Report Card](https://goreportcard.com/badge/github.com/setekhid/ketos)](https://goreportcard.com/report/github.com/setekhid/ketos)
+[![GoDoc](https://godoc.org/github.com/setekhid/ketos?status.svg)](https://godoc.org/github.com/setekhid/ketos) [![Go Report Card](https://goreportcard.com/badge/github.com/setekhid/ketos)](https://goreportcard.com/report/github.com/setekhid/ketos) [![Build Status](https://travis-ci.org/setekhid/ketos.svg?branch=master)](https://travis-ci.org/setekhid/ketos) [![codecov](https://codecov.io/gh/setekhid/ketos/branch/master/graph/badge.svg)](https://codecov.io/gh/setekhid/ketos)
 
 A tasting project for Go Hackathon 2017 Shanghai.
 
