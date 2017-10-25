@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/setekhid/ketos/pkg/rootpath"
 	"syscall"
 )
 
@@ -10,13 +9,6 @@ import (
 //     errno = no;
 // }
 import "C"
-
-// expand path to fake rootfs
-func expandPathName(pathNameC *C.char, ro bool) (string, error) {
-
-	pathNameG := C.GoString(pathNameC)
-	return rootpath.ExpandPath(pathNameG, ro)
-}
 
 // set error number
 func setErrno(err error) {

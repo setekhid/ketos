@@ -9,7 +9,8 @@ import "C"
 //export eaccess
 func eaccess(cPath *C.char, cMode C.int) C.int {
 
-	path, err := expandPathName(cPath, true)
+	path := C.GoString(cPath)
+	expanded, err := RootLayers.Expand(path)
 	if err != nil {
 		setErrno(err)
 		return -1
@@ -29,5 +30,5 @@ func eaccess(cPath *C.char, cMode C.int) C.int {
 		return -1
 	}
 
-	return libc_eaccess(path, int(cMode))
+	return libc_eaccess(expanded, int(cMode))
 }

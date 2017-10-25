@@ -1,5 +1,4 @@
 package main
 
-var (
-	Version = "devel"
-)
+//export ketos_libcfs_version
+var ketos_libcfs_version = "devel"

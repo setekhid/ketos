@@ -27,10 +27,35 @@ func NewOverlayFS(layers ...string) (*OverlayFS, error) {
 		absLayers = append(absLayers, abs)
 	}
 
+	return NewSimpleOverlayFS(absLayers...), nil
+}
+
+func NewSimpleOverlayFS(layers ...string) *OverlayFS {
 	return &OverlayFS{
-		top:    absLayers[len(absLayers)-1],
-		lowers: absLayers[:len(absLayers)-1],
-	}, nil
+		top:    layers[len(layers)-1],
+		lowers: layers[:len(layers)-1],
+	}
+}
+
+// NewOverlayFSFromEnv generate OverlayFS instance from environment variable
+// KETOS_ROOTPATH_LAYERS, default value is "/:/_ketos"
+func NewOverlayFSFromEnv() (*OverlayFS, error) {
+
+	layers := os.Getenv("KETOS_ROOTPATH_LAYERS")
+	if len(layers) <= 0 {
+		layers = string(filepath.Separator) +
+			string(filepath.ListSeparator) +
+			filepath.Join(string(filepath.Separator), "_ketos")
+	}
+
+	return NewOverlayFS(filepath.SplitList(layers)...)
+}
+
+func NewDefaultOverlayFS() *OverlayFS {
+	return NewSimpleOverlayFS(
+		string(filepath.Separator),
+		filepath.Join(string(filepath.Separator), "_ketos"),
+	)
 }
 
 // Expand expand the path to the right layer path

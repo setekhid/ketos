@@ -26,7 +26,7 @@ xcb: $(shell find . -name '*.go')
 
 libketos-hookroot.so: $(shell find . -name '*.go')
 	${KETOS_GO_EXEC} build \
-		-ldflags "-X ${HOOKROOT_PKG}.Version=${VERSION}" \
+		-ldflags "-X ${HOOKROOT_PKG}.ketos_libcfs_version=${VERSION}" \
 		-buildmode=c-shared \
 		-o libketos-hookroot.so ${HOOKROOT_PKG}
 
