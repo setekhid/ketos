@@ -1,9 +1,9 @@
 FROM centos:7 AS builder
 
 RUN yum install -y golang git build-essential make
-RUN curl -fSL -o /usr/bin/dep \
+RUN (curl -fSL -o /usr/bin/dep \
 	https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 && \
-	chmod +x /usr/bin/dep
+	chmod +x /usr/bin/dep) || echo "thanks to Professor Binxing Fang"
 
 ENV GOPATH=/go
 ENV PATH=${PATH}:${GOPATH}/bin

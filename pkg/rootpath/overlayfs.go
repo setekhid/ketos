@@ -57,7 +57,7 @@ func NewDefaultOverlayFS() *OverlayFS {
 }
 
 // Expand expand the path to the right layer path
-func (r *OverlayFS) Expand(path string) (string, error) {
+func (r *OverlayFS) ExpandPath(path string) (string, error) {
 
 	path, err := r.cleanPath(path)
 	if err != nil {
@@ -99,7 +99,7 @@ func (r *OverlayFS) CopyForWriting(path string) (string, error) {
 		return "", err
 	}
 
-	lowerFilePath, err := r.Expand(path)
+	lowerFilePath, err := r.ExpandPath(path)
 	if err != nil {
 		return "", err
 	}
@@ -127,6 +127,30 @@ func (r *OverlayFS) CopyForWriting(path string) (string, error) {
 	_, err = io.Copy(topFile, lowerFile)
 
 	return topFilePath, nil
+}
+
+// ShrinkPath shrink the expanded path to the fake rootfs path
+func (r *OverlayFS) ShrinkPath(expandedPath string) (string, error) {
+
+	expandedPath, err := r.cleanPath(expandedPath)
+	if err != nil {
+		return "", err
+	}
+
+	if filepath.HasPrefix(expandedPath, r.top+string(filepath.Separator)) {
+		return expandedPath[len(r.top):], nil
+	}
+
+	// check lower layers
+	for i := len(r.lowers) - 1; i >= 0; i-- {
+
+		lower := r.lowers[i]
+		if filepath.HasPrefix(expandedPath, lower+string(filepath.Separator)) {
+			return expandedPath[len(lower):], nil
+		}
+	}
+
+	return "", errors.New("unknown expanded path")
 }
 
 func (r *OverlayFS) prepareOnTopLayer(path string) (string, error) {

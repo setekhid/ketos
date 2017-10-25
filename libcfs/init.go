@@ -6,6 +6,10 @@ import (
 
 var (
 	RootLayers *rootpath.OverlayFS
+
+	// TODO write log to files
+	StdoutFile string
+	StderrFile string
 )
 
 func init() {

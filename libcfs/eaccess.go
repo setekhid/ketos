@@ -10,7 +10,7 @@ import "C"
 func eaccess(cPath *C.char, cMode C.int) C.int {
 
 	path := C.GoString(cPath)
-	expanded, err := RootLayers.Expand(path)
+	expanded, err := RootLayers.ExpandPath(path)
 	if err != nil {
 		setErrno(err)
 		return -1

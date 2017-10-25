@@ -11,7 +11,7 @@ var (
 	KetosChrootImgTag string
 )
 
-func init() {
+func init0() {
 
 	toImageEnv := strings.ToLower(os.Getenv("KETOS_CHROOT_TOIMG"))
 	KetosChrootToImg = toImageEnv == "true" || toImageEnv == "t" ||

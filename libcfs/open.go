@@ -13,7 +13,7 @@ func open(cPath *C.char, cFlags C.uint, cMode C.int) C.int {
 	path := C.GoString(cPath)
 	ro := cFlags&C.uint(os.O_WRONLY|os.O_RDWR|os.O_APPEND|os.O_CREATE) == 0
 
-	expand := RootLayers.Expand
+	expand := RootLayers.ExpandPath
 	if !ro {
 		expand = RootLayers.CopyForWriting
 	}
