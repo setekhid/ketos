@@ -43,9 +43,7 @@ func NewOverlayFSFromEnv() (*OverlayFS, error) {
 
 	layers := os.Getenv("KETOS_ROOTPATH_LAYERS")
 	if len(layers) <= 0 {
-		layers = string(filepath.Separator) +
-			string(filepath.ListSeparator) +
-			filepath.Join(string(filepath.Separator), "_ketos")
+		return NewDefaultOverlayFS(), nil
 	}
 
 	return NewOverlayFS(filepath.SplitList(layers)...)

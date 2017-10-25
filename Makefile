@@ -15,6 +15,7 @@ test:
 install: build
 	install -d ${DESTDIR}/usr/local/bin/
 	install -m 755 ./xcb ${DESTDIR}/usr/local/bin/xcb
+	install -m 755 ./bin/keto.sh ${DESTDIR}/usr/local/bin/keto.sh
 	install -d ${DESTDIR}/usr/local/lib/
 	install -m 755 \
 		./libketos-hookroot.so ${DESTDIR}/usr/local/lib/libketos-hookroot.so

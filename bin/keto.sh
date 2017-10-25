@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-export KETOS_CHROOT_WD=FALSE
-export KETOS_CHROOT_ROOT=/_ketos 
-export LD_PRELOAD=/opt/ketos/libketos-hookroot.so
+export KETOS_ROOTPATH_LAYERS=/:/_ketos
+export LD_PRELOAD=/usr/local/lib/libketos-hookroot.so
 
 "$@"
