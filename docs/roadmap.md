@@ -18,6 +18,7 @@ Download base image and publish derived image to registry:
 
 * How to tar a folder storing docker layers to docker image?
 	* There are two version v1 & v2 of docker image format, still no clue why v1 still exists, compares about two is [here](https://www.slideshare.net/Docker/docker-registry-v2).
+	* details about [manifest-v2-2](https://docs.docker.com/registry/spec/manifest-v2-2/) and [manifest-v2-1](https://docs.docker.com/registry/spec/manifest-v2-1/)
 	* Version 2 manifest file spec is storing [here](https://github.com/docker/distribution/tree/master/docs/spec), with name `manifest-v2-1.md` and `manifest-v2-2.md`. The version 1 spec is [here](https://github.com/moby/moby/tree/master/image/spec).
 		* The docker image metadata seems marshal from [code `image.go`](https://github.com/moby/moby/blob/master/image/image.go)
 * Push image tar to docker registry.

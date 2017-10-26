@@ -40,11 +40,21 @@ func main() {
 		Mode: int64(os.ModePerm),
 	}
 
-	tarw.WriteHeader(&asset2)
+	err = tarw.WriteHeader(&asset2)
 	if err != nil {
 		panic(err)
 	}
 	_, err = tarw.Write(asset2_content)
+	if err != nil {
+		panic(err)
+	}
+
+	asset_dir := tar.Header{
+		Name:     "abc/bbc",
+		Typeflag: tar.TypeDir,
+		Mode:     int64(os.ModePerm),
+	}
+	err = tarw.WriteHeader(&asset_dir)
 	if err != nil {
 		panic(err)
 	}
