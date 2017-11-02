@@ -12,7 +12,7 @@ import (
 
 	_ "github.com/docker/distribution"
 	"github.com/pkg/errors"
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	client "github.com/setekhid/ketos/pkg/registry"
 )
 
