@@ -12,6 +12,11 @@ var (
 )
 
 func TestPullV2(t *testing.T) {
+
+	if testing.Short() {
+		t.SkipNow()
+	}
+
 	assert := assert.New(t)
 
 	err := pullV2(testImageName, testImageTag)
@@ -19,6 +24,11 @@ func TestPullV2(t *testing.T) {
 }
 
 func TestPullV1(t *testing.T) {
+
+	if testing.Short() {
+		t.SkipNow()
+	}
+
 	assert := assert.New(t)
 
 	err := pullV1(testImageName, testImageTag)

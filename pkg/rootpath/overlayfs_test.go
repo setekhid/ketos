@@ -18,7 +18,7 @@ func TestOverlayFS(t *testing.T) {
 	)
 	require.NoError(t, err)
 
-	asset1, err := rootfs.Expand("/asset1")
+	asset1, err := rootfs.ExpandPath("/asset1")
 	require.NoError(t, err)
 	t.Log(asset1)
 	assert.True(t, strings.HasSuffix(asset1, "testdata/lowers/b/asset1"))

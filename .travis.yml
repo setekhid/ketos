@@ -6,7 +6,7 @@ go:
 
 script:
     - go get -t -v ./...
-    - go test -race -coverprofile=coverage.txt -convermode=atomic
+    - go test -short -race -coverprofile=coverage.txt -convermode=atomic
 
 after_success:
     - bash <(curl -s https://codecov.io/bash)
