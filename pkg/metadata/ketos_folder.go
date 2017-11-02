@@ -132,6 +132,6 @@ func (m MetaFolders) Manifests() string {
 }
 
 // Manifest get the specific manifest
-func (m MetaFolders) Manifest(ref string) string {
-	return filepath.Join(m.Manifests(), ref)
+func (m MetaFolders) Manifest(tag string) string {
+	return filepath.Join(m.Manifests(), tag+".json")
 }
