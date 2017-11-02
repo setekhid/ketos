@@ -18,6 +18,7 @@ func TestDockerImage(t *testing.T) {
 	cases := map[string]ImagePair{
 		"setekhid/ketos":             {hubUrl, "setekhid/ketos", "latest"},
 		"quay.io/setekhid/ketos:0.1": {"quay.io", "setekhid/ketos", "0.1"},
+		"alpine:3.6":                 {hubUrl, "library/alpine", "3.6"},
 	}
 
 	for name, pair := range cases {
