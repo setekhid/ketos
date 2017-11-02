@@ -170,3 +170,39 @@ func (d *Metadatas) ContainerPath() string {
 func (d *Metadatas) MetaFolderPath() string {
 	return string(d.folders)
 }
+
+var (
+	metaFolders = map[string]*Metadatas{}
+)
+
+func GetMetadatas(path string) (*Metadatas, error) {
+
+	path, err := SeekKetosFolder(path)
+	if err != nil {
+		return nil, err
+	}
+
+	meta, ok := metaFolders[path]
+	if ok {
+		return meta, nil
+	}
+
+	meta, err = ConnMetadata(path)
+	if err != nil {
+		return nil, err
+	}
+
+	metaFolders[path] = meta
+
+	return meta, nil
+}
+
+func CurrentMetadatas() (*Metadatas, error) {
+
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, errors.Wrap(err, "get working directory")
+	}
+
+	return GetMetadatas(wd)
+}

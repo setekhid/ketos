@@ -11,6 +11,8 @@ import (
 	"github.com/setekhid/ketos/pkg/registry"
 )
 
+const KetosMetaFolder = ".ketos"
+
 // SeekKetosFolder seek .ketos from path to root
 func SeekKetosFolder(path string) (string, error) {
 
@@ -21,7 +23,7 @@ func SeekKetosFolder(path string) (string, error) {
 
 	for {
 
-		mayKetos := filepath.Join(path, ".ketos")
+		mayKetos := filepath.Join(path, KetosMetaFolder)
 		_, err := os.Stat(mayKetos)
 		if err == nil {
 			return mayKetos, nil
