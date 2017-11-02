@@ -1,10 +1,10 @@
 package main
 
 import (
-	catmani "github.com/setekhid/ketos/cmd/cat-manifest"
 	"github.com/setekhid/ketos/cmd/chroot"
 	"github.com/setekhid/ketos/cmd/commit"
 	"github.com/setekhid/ketos/cmd/image"
+	"github.com/setekhid/ketos/cmd/opmanifest"
 	"github.com/setekhid/ketos/cmd/pull"
 	"github.com/setekhid/ketos/cmd/push"
 	"github.com/setekhid/ketos/cmd/version"
@@ -20,7 +20,8 @@ func main() {
 		push.Command,
 		version.Command,
 		image.Command,
-		catmani.Command,
+		opmanifest.CatManifest,
+		opmanifest.PutManifest,
 	)
 
 	err := Command.Execute()

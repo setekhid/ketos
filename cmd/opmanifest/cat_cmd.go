@@ -1,18 +1,16 @@
-package catmanifest
+package opmanifest
 
 import (
 	"encoding/json"
 	"os"
-	"strings"
 
 	"github.com/pkg/errors"
-	"github.com/setekhid/ketos/pkg/metadata"
 	"github.com/setekhid/ketos/pkg/registry"
 	"github.com/spf13/cobra"
 )
 
 var (
-	Command = &cobra.Command{
+	CatManifest = &cobra.Command{
 		Use:   "cat-manifest",
 		Short: "cat-manifest [image-name]:tag",
 		Args:  cobra.ExactArgs(1),
@@ -26,27 +24,9 @@ func init() {
 
 func catManifest(cmd *cobra.Command, args []string) error {
 
-	image := args[0]
-	if strings.HasPrefix(image, ":") {
-
-		tag := image
-
-		folder, err := metadata.KetosFolder()
-		if err != nil {
-			return err
-		}
-
-		meta, err := metadata.ConnMetadata(folder)
-		if err != nil {
-			return err
-		}
-
-		conf, err := meta.GetConfig()
-		if err != nil {
-			return err
-		}
-
-		image = conf.Repository.Registry + "/" + conf.Repository.Name + tag
+	image, err := FillImage(args[0])
+	if err != nil {
+		return err
 	}
 
 	repo, tag, err := registry.DockerImage(image).Connect()
