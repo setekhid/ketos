@@ -165,6 +165,11 @@ func (r *Repository) PutManifest(
 	return r.conn.PutManifest(r.repo, tag, signed)
 }
 
+// HasLayer check if remote repository has specific layer
+func (r *Repository) HasLayer(digest digest.Digest) (bool, error) {
+	return r.conn.HasLayer(r.repo, digest)
+}
+
 // GetLayer gets the layer of image
 func (r *Repository) GetLayer(digest digest.Digest, content io.Writer) error {
 
