@@ -4,15 +4,15 @@
 >
 > 2017/11/05 is the deadline, codes in master branch will work and document well.
 
-# Cross Container Builder (xcbuild)
+# Cross Container Builder (Ketos)
 
-[![GoDoc](https://godoc.org/github.com/setekhid/ketos?status.svg)](https://godoc.org/github.com/setekhid/ketos) [![Go Report Card](https://goreportcard.com/badge/github.com/setekhid/ketos)](https://goreportcard.com/report/github.com/setekhid/ketos) [![Build Status](https://travis-ci.org/setekhid/ketos.svg?branch=master)](https://travis-ci.org/setekhid/ketos) [![codecov](https://codecov.io/gh/setekhid/ketos/branch/master/graph/badge.svg)](https://codecov.io/gh/setekhid/ketos)
+[![GoDoc](https://godoc.org/github.com/setekhid/ketos?status.svg)](https://godoc.org/github.com/setekhid/ketos) [![Go Report Card](https://goreportcard.com/badge/github.com/setekhid/ketos)](https://goreportcard.com/report/github.com/setekhid/ketos) [![Build Status](https://travis-ci.org/setekhid/ketos.svg?branch=master)](https://travis-ci.org/setekhid/ketos)
 
 A tasting project for Go Hackathon 2017 Shanghai.
 
 This project aims to help you building a docker image in CI platform better.
 
-## Hackathon Team
+## Hackathon Team (alpha order)
 
 ```
 Ace-Tang   (github.com/ace-tang) <aceapril@126.com>
