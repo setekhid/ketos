@@ -1,6 +1,7 @@
 package main
 
 import (
+	catmani "github.com/setekhid/ketos/cmd/cat-manifest"
 	"github.com/setekhid/ketos/cmd/chroot"
 	"github.com/setekhid/ketos/cmd/commit"
 	"github.com/setekhid/ketos/cmd/image"
@@ -19,6 +20,7 @@ func main() {
 		push.Command,
 		version.Command,
 		image.Command,
+		catmani.Command,
 	)
 
 	err := Command.Execute()

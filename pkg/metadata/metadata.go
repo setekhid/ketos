@@ -30,6 +30,25 @@ func NewMetadata(path string, image string) (*Metadatas, error) {
 	return data, err
 }
 
+func ConnMetadata(path string) (*Metadatas, error) {
+
+	path, err := filepath.Abs(path)
+	if err != nil {
+		return nil, errors.Wrap(err, "calc absolute path of ketos folder")
+	}
+
+	data := &Metadatas{MetaFolders(path)}
+	inited, err := data.hasInited()
+	if err != nil {
+		return nil, err
+	}
+	if !inited {
+		return nil, errors.New("ketos metadata folder hasn't been initialized")
+	}
+
+	return data, err
+}
+
 func (d *Metadatas) init(image string) error {
 
 	inited, err := d.hasInited()
