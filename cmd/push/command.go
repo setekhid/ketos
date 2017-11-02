@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	"github.com/spf13/cobra"
 )
 

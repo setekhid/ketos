@@ -3,7 +3,7 @@ package rootpath
 import (
 	"encoding/json"
 	manifestv2 "github.com/docker/distribution/manifest/schema2"
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	"os"
 	"path/filepath"
 )

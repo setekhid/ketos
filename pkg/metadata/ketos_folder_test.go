@@ -1,7 +1,7 @@
 package metadata_test
 
 import (
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"os"

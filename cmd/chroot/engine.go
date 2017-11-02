@@ -2,7 +2,7 @@ package chroot
 
 import (
 	"github.com/pkg/errors"
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	"io"
 	"os/exec"
 	"path/filepath"

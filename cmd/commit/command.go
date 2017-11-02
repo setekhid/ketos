@@ -9,7 +9,7 @@ import (
 	manifestv2 "github.com/docker/distribution/manifest/schema2"
 	"github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
-	"github.com/setekhid/ketos/pkg/ketos/metadata"
+	"github.com/setekhid/ketos/pkg/metadata"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"io"
