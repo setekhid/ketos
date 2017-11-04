@@ -4,9 +4,11 @@ go:
     - 1.8.x
     - tip
 
-script:
-    - go get -t -v ./...
-    - go test -race -coverprofile=coverage.txt -convermode=atomic
+install:
+    - curl -fsSL -o ./dep https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 && chmod +x ./dep
 
-after_success:
-    - bash <(curl -s https://codecov.io/bash)
+before_script:
+    - ./dep ensure
+
+script:
+    - go test -short -race $(go list ./... | grep -v /vendor/)

@@ -7,6 +7,11 @@ import (
 )
 
 func TestShowImages(t *testing.T) {
+
+	if testing.Short() {
+		t.SkipNow()
+	}
+
 	assert := assert.New(t)
 
 	err := showImages(defaultDir)

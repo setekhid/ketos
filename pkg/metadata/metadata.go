@@ -1,112 +1,172 @@
 package metadata
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
+	manifestV1 "github.com/docker/distribution/manifest/schema1"
 	"github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
+	"gopkg.in/yaml.v2"
 )
 
-// SeekKetosFolder seek .ketos from path to root
-func SeekKetosFolder(path string) (string, error) {
+type Metadatas struct {
+	folders MetaFolders
+}
+
+func NewMetadata(path string, image string) (*Metadatas, error) {
 
 	path, err := filepath.Abs(path)
 	if err != nil {
-		return "", errors.Wrap(err, "abs path")
+		return nil, errors.Wrap(err, "calc absolute path of ketos folder")
 	}
 
-	for {
+	data := &Metadatas{MetaFolders(path)}
+	err = data.init(image)
 
-		mayKetos := filepath.Join(path, ".ketos")
-		_, err := os.Stat(mayKetos)
-		if err == nil {
-			return mayKetos, nil
-		}
-
-		if !os.IsNotExist(err) {
-			return "", errors.Wrap(err, "open ketos metadata")
-		}
-
-		parent := filepath.Dir(path)
-		if path == parent {
-			return "", errors.New("didn't find metadata")
-		}
-		path = parent
-	}
+	return data, err
 }
 
-// KetosFolder seek .ketos from current working directory to root
-func KetosFolder() (string, error) {
+func ConnMetadata(path string) (*Metadatas, error) {
 
-	wd, err := os.Getwd()
+	path, err := filepath.Abs(path)
 	if err != nil {
-		return "", errors.Wrap(err, "get current working directory")
+		return nil, errors.Wrap(err, "calc absolute path of ketos folder")
 	}
 
-	return SeekKetosFolder(wd)
+	data := &Metadatas{MetaFolders(path)}
+	inited, err := data.hasInited()
+	if err != nil {
+		return nil, err
+	}
+	if !inited {
+		return nil, errors.New("ketos metadata folder hasn't been initialized")
+	}
+
+	return data, err
 }
 
-// MetaFolders represents ketos metadata folders
-type MetaFolders string
+func (d *Metadatas) init(image string) error {
 
-// InitFS initialize file system
-func (m MetaFolders) InitFS() error {
-
-	err := os.MkdirAll(filepath.Dir(m.Config()), os.ModePerm)
+	inited, err := d.hasInited()
 	if err != nil {
-		return errors.Wrap(err, "mkdir directory of config")
+		return err
+	}
+	if inited {
+		return nil
 	}
 
-	err = os.MkdirAll(m.Container(), os.ModePerm)
+	err = d.folders.InitFolders()
 	if err != nil {
-		return errors.Wrap(err, "mkdir container directory")
+		return err
 	}
 
-	err = os.MkdirAll(m.Layers(), os.ModePerm)
+	err = d.folders.InitConfig(image)
 	if err != nil {
-		return errors.Wrap(err, "mkdir layers")
-	}
-
-	err = os.MkdirAll(m.Manifests(), os.ModePerm)
-	if err != nil {
-		return errors.Wrap(err, "mkdir manifests")
+		return err
 	}
 
 	return nil
 }
 
-// Config get the config file path
-func (m MetaFolders) Config() string {
-	return filepath.Join(string(m), "config.yaml")
+func (d *Metadatas) hasInited() (bool, error) {
+
+	_, err := os.Stat(d.folders.Config())
+	if err != nil && !os.IsNotExist(err) {
+		return false, errors.Wrap(err, "check ketos config file")
+	}
+
+	return err == nil, nil
 }
 
-// Container return the top working layer
-func (m MetaFolders) Container() string {
-	return filepath.Dir(string(m))
+type KetosConfig struct {
+	InitImageName string `yaml:"init_image_name"`
+
+	Repository struct {
+		Name     string `yaml:"name"`
+		Registry string `yaml:"registry"`
+	}
 }
 
-// Layers return the layers folder path
-func (m MetaFolders) Layers() string {
-	return filepath.Join(string(m), "layers")
+func (d *Metadatas) GetConfig() (*KetosConfig, error) {
+
+	content, err := ioutil.ReadFile(d.folders.Config())
+	if err != nil {
+		return nil, errors.Wrap(err, "reading ketos config")
+	}
+
+	config := &KetosConfig{}
+	err = yaml.Unmarshal(content, config)
+	if err != nil {
+		return nil, errors.Wrap(err, "unmarshal ketos config")
+	}
+
+	return config, nil
 }
 
-// Layer return the specified layer directory
-func (m MetaFolders) Layer(digest digest.Digest) string {
-	return filepath.Join(m.Layers(), digest.Hex())
+func (d *Metadatas) ListTags() ([]string, error) {
+
+	infos, err := ioutil.ReadDir(d.folders.Manifests())
+	if err != nil {
+		return nil, errors.Wrap(err, "reading manifest directory")
+	}
+
+	tags := []string{}
+	for _, info := range infos {
+
+		name := info.Name()
+		if strings.HasSuffix(name, ".json") {
+			tag := name[:len(name)-len(".json")]
+			tags = append(tags, tag)
+		}
+	}
+
+	return tags, nil
 }
 
-// MetaLayer return the json file of config layer
-func (m MetaFolders) MetaLayer(digest digest.Digest) string {
-	return filepath.Join(m.Layers(), digest.Hex()+".json")
+func (d *Metadatas) GetManifest(tag string) (*manifestV1.Manifest, error) {
+
+	content, err := ioutil.ReadFile(d.folders.Manifest(tag))
+	if err != nil {
+		return nil, errors.Wrap(err, "reading manifest file")
+	}
+
+	manifest := &manifestV1.Manifest{}
+	err = json.Unmarshal(content, manifest)
+	if err != nil {
+		return nil, errors.Wrap(err, "unmarshal manifest file")
+	}
+
+	return manifest, nil
 }
 
-// Manifests return the manifests folder path
-func (m MetaFolders) Manifests() string {
-	return filepath.Join(string(m), "manifests")
+func (d *Metadatas) PutManifest(
+	tag string, manifest *manifestV1.Manifest) error {
+
+	content, err := json.Marshal(manifest)
+	if err != nil {
+		return errors.Wrap(err, "marshal manifest json")
+	}
+
+	err = ioutil.WriteFile(d.folders.Manifest(tag), content, os.ModePerm)
+	if err != nil {
+		return errors.Wrap(err, "write down manifest")
+	}
+
+	return nil
 }
 
-// Manifest get the specific manifest
-func (m MetaFolders) Manifest(ref string) string {
-	return filepath.Join(m.Manifests(), ref)
+func (d *Metadatas) LayerPath(digest digest.Digest) string {
+	return d.folders.Layer(digest)
+}
+
+func (d *Metadatas) ContainerPath() string {
+	return d.folders.Container()
+}
+
+func (d *Metadatas) MetaFolderPath() string {
+	return string(d.folders)
 }

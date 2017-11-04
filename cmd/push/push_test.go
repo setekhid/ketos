@@ -15,6 +15,11 @@ var (
 )
 
 func TestPush(t *testing.T) {
+
+	if testing.Short() {
+		t.SkipNow()
+	}
+
 	assert := assert.New(t)
 
 	ketosFolder, err := metadata.KetosFolder()

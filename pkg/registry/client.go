@@ -84,11 +84,18 @@ func (img DockerImage) ToRepository() (string, bool) {
 func (img DockerImage) SplitRegistry() (string, DockerImage) {
 
 	if img.IsFromHub() {
-		return DefaultRegistry, img
+
+		registry, imageName := DefaultRegistry, string(img)
+		if strings.Count(imageName, "/") < 1 {
+			imageName = "library/" + imageName
+		}
+
+		return registry, DockerImage(imageName)
 	}
 
 	name := string(img)
 	ind := strings.Index(name, "/")
+
 	return name[:ind], DockerImage(name[ind+1:])
 }
 
@@ -156,6 +163,11 @@ func (r *Repository) PutManifest(
 	}
 
 	return r.conn.PutManifest(r.repo, tag, signed)
+}
+
+// HasLayer check if remote repository has specific layer
+func (r *Repository) HasLayer(digest digest.Digest) (bool, error) {
+	return r.conn.HasLayer(r.repo, digest)
 }
 
 // GetLayer gets the layer of image

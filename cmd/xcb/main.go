@@ -4,6 +4,8 @@ import (
 	"github.com/setekhid/ketos/cmd/chroot"
 	"github.com/setekhid/ketos/cmd/commit"
 	"github.com/setekhid/ketos/cmd/image"
+	"github.com/setekhid/ketos/cmd/oplayer"
+	"github.com/setekhid/ketos/cmd/opmanifest"
 	"github.com/setekhid/ketos/cmd/pull"
 	"github.com/setekhid/ketos/cmd/push"
 	"github.com/setekhid/ketos/cmd/version"
@@ -19,6 +21,12 @@ func main() {
 		push.Command,
 		version.Command,
 		image.Command,
+
+		opmanifest.CatManifest,
+		opmanifest.PutManifest,
+		oplayer.HasLayer,
+		oplayer.PullLayer,
+		oplayer.PushLayer,
 	)
 
 	err := Command.Execute()

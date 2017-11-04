@@ -1,27 +1,42 @@
 package metadata_test
 
 import (
+	"io/ioutil"
+	"os"
+	"testing"
+
+	manifestV1 "github.com/docker/distribution/manifest/schema1"
 	"github.com/setekhid/ketos/pkg/metadata"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"os"
-	"strings"
-	"testing"
 )
 
-func TestKetosFolder(t *testing.T) {
+func TestMetadataBasicUsage(t *testing.T) {
 
-	path, err := metadata.SeekKetosFolder("./testdata/a/c")
+	tempDir, err := ioutil.TempDir("", "")
 	require.NoError(t, err)
-	assert.True(t, strings.HasSuffix(path, "/testdata/a/.ketos"))
+	defer os.RemoveAll(tempDir)
 
-	path, err = metadata.SeekKetosFolder("./testdata/a/b")
+	meta, err := metadata.NewMetadata(tempDir, "setekhid/dummy:latest")
 	require.NoError(t, err)
-	assert.True(t, strings.HasSuffix(path, "/testdata/a/b/.ketos"))
 
-	err = os.Chdir("./testdata/a")
+	// check repository config
+	conf, err := meta.GetConfig()
 	require.NoError(t, err)
-	path, err = metadata.KetosFolder()
+	assert.Equal(t, "setekhid/dummy:latest", conf.InitImageName)
+
+	// check manifest storage
+	manifest := &manifestV1.Manifest{
+		Name: "setekhid/dummy",
+		Tag:  "latest",
+	}
+	err = meta.PutManifest("latest", manifest)
+	assert.NoError(t, err)
+	manifest0, err := meta.GetManifest("latest")
+	assert.Equal(t, manifest, manifest0)
+
+	// check tags listing
+	tags, err := meta.ListTags()
 	require.NoError(t, err)
-	assert.True(t, strings.HasSuffix(path, "/testdata/a/.ketos"))
+	assert.EqualValues(t, []string{"latest"}, tags)
 }
