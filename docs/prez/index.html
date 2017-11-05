@@ -17,120 +17,144 @@
 <div id="impress">
 
     <div class="step" data-x="0", data-y="0">
-        <h1>xcbuild</h1>
-        <p>Cross container building utilities.</p>
-        <p>&#x1f389;Go Hackathon 2017 Shanghai&#x1f389;<br />
-            &nbsp;&nbsp;Made by Huitse Tai &amp; Ace Tang</p>
+        <h1>Ketos</h1>
+        <p>Cross Container Building Utilities</p>
+        <p>&#x1f389;Go Hackathon 2017 @Shanghai&#x1f389;<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- made by Huitse Tai &amp; Ace Tang</p>
     </div>
 
     <div class="step" data-x="1000" data-y="0">
-        <h1>What's this?</h1>
-        <ul>
-            <li>
-                <h3>A toolset which aim to replace docker build in CI.</h3>
-            </li>
-            <li>
-                <h3>First, it can pull docker image.</h3>
-            </li>
-            <li>
-                <h3>Second, it can generate top layer for a new image.</h3>
-            </li>
-            <li>
-                <h3>Third, it can commit to generate a new image.</h3>
-            </li>
-            <li>
-                <h3>And push back to registry.</h3>
-            </li>
-        </ul>
+        <h1>What does the Ketos mean?</h1>
+        <p>In Ancient Greek, the word ketos denotes a large fish, a whale, a shark, or a sea monster.</p>
+        <p>The term cetacean (for whale) originates from cetus. In Greek art, cetea were depicted as serpentine fish. The name of the mythological figure Ceto is derived from ketos. The name of the constellation Cetus also derives from this word.</p>
     </div>
 
     <div class="step" data-x="2000" data-y="0">
-        <h1>Why?</h1>
+        <h1>What's this?</h1>
         <ul>
             <li>
-                <h3>Digging deeper what does docker build do:</h3>
+                <h4>A set of utilities which aims to replace docker build in CI platform.</h4>
+            </li>
+            <li>
+                <h4>Operating with docker registry:</h4>
                 <ul>
-                    <li><h4>Pull down image.</h4></li>
-                    <li><h4>Add asset files or use some command to generate some.</h4></li>
-                    <li><h4>Tar the whole static folder to an image layer.</h4></li>
+                    <li><h5>Can pull docker image from registry</h5></li>
+                    <li><h5>Can commit to generate a new image layer</h5></li>
+                    <li><h5>Can push back the new image with our DIY layers to registry</h5></li>
                 </ul>
             </li>
             <li>
-                <h3>I though docker daemon is so heavy for CI.</h3>
+                <h4>A few of fake chroot solution utilities to help you DIY your own image layers.</h4>
             </li>
         </ul>
     </div>
 
     <div class="step" data-x="3000" data-y="0">
-        <h1>...and more reasons</h1>
+        <h1>Why?</h1>
         <ul>
-            <li><h3>docker build is a monolithic command, it does everything in one command.</h3></li>
-            <li><h3>docker build is not design for CI integration, will make user confortable but will make CI platform integrating work much more trouble.</h3>
+            <li>
+                <h4>Imaging with the world missing <code>docker build</code>, how would you DIY a docker image?!</h4>
                 <ul>
-                    <li><h4>Like, if you peek into how does registry work, can we parallel generate each image layer which are not depending each other?!</h4></li>
+                    <li>Download a docker image as base image, actually the <code>manifest.json</code> is all you need usually.</li>
+                    <li>Use tar command to tar a whole directory and gzip it, that your new layer.</li>
+                    <li>Updating <code>manifest.json</code> you downloaded at step one, add your new layer to it.</li>
+                    <li>Upload all your work.</li>
                 </ul>
+            </li>
+
+            <li>
+                <h4>Digging deeper what does <code>docker build</code> actually do?</h4>
             </li>
         </ul>
     </div>
 
     <div class="step" data-x="4000" data-y="0">
-        <h1>Prototype Tasting</h1>
-        <pre><code># start tasting environment
-docker-compose up --build -d
-docker exec -it ketos_ketos_1
-# begin
-mkdir -p /taste/.ketos/{layers,tags}
-cd /taste
-xcb pull alpine:3.6
-echo "this is a static asset file" \
-    > ./blabla_little_magical_spirit
-xcb chroot --tag 3.6 -- \
-    bach -c 'echo wizr is watching this > /hello.txt'
-xcb commit --tag 3.6
-xcb push</code></pre>
+        <h1>CI Platform</h1>
+        <p>look at this trending of whole 2017 <a href="https://g.co/trends/Hncq1">https://g.co/trends/Hncq1</a></p>
+        <ul>
+            <li>I though the trending is enough to explain why our CI platform should support docker image building.</li>
+            <li>And I though the trending is enough to explain why our CI platform should use docker container to do building.</li>
+            <li><h4>So, we should build a CI platform to do <code>docker build</code>ing in docker containers.</h4></li>
+        </ul>
     </div>
 
     <div class="step" data-x="5000" data-y="0">
-        <h1>The Core</h1>
+        <h1>Now <code>docker build</code></h1>
         <ul>
-            <li><h3>Integration with docker registry</h3>
-                <ul>
-                    <li>thanks to the design of docker registry service, we can do more.</li>
-                </ul>
-            </li>
-            <li><h3>Imitate a fake rootfs</h3>
-                <ul>
-                    <li>LD_PRELOAD to hook into libc calling</li>
-                    <li>ptrace with SYS_PTRACE cap, may cause some kernel bugs, bug theoretically it's safe</li>
-                    <li>chroot, a long history</li>
-                    <li>runc, huge and so suitable for CI</li>
-                </ul>
-            </li>
+            <li><h4>Do you really need <code>cgroup</code>, if your building task is executing in a docker container or your own PC?!</h4></li>
+            <li><h4>Do you really need <code>namespace</code>, if your building task is executing in a docker container or your own PC?!</h4></li>
+            <li><h4>In our image-DIY page, it seems that we don't need to be privileged.</h4></li>
+            <li><h4>Considering so many problem of <code>dind</code> <a href="http://jpetazzo.github.io/2015/09/03/do-not-use-docker-in-docker-for-ci/">here</a> (I'm not saying there are no solutions), and so many troubles.</h4></li>
         </ul>
     </div>
 
     <div class="step" data-x="6000" data-y="0">
-        <h1>libc hook</h1>
+        <h1>So here we are, &#x1f389;Ketos&#x1f389;</h1>
         <ul>
-            <li>after digging some documents. golang's syscall design cause us a lot of trouble, but worth.</li>
-            <li>thanks to the mess of POSIX, the kernel interact is not as easy as we expected.</li>
-            <li><h3>but we made it!</h3></li>
+            <li><h4>It helps you building each layer of an image.</h4></li>
+            <li><h4>It helps you combining layers to an image.</h4></li>
+            <li><h4>It helps you manually managing docker registry as you like.</h4></li>
         </ul>
     </div>
 
     <div class="step" data-x="7000" data-y="0">
+        <h1>Tasting</h1>
+        <pre><code># start tasting environment
+docker-compose up --build -d
+docker exec -it ketos_ketos_1
+# begin
+mkdir -p /taste
+cd /taste
+xcb init --image alpine:3.6 .
+echo "this is a static asset file" \
+    > ./blabla_little_magical_spirit
+chr libc --tag 3.6 -- \
+    bach -c 'echo 巫泰到此一游 > /a-poor-tree.txt'
+xcb commit --tag 3.6
+xcb push</code></pre>
+    </div>
+
+    <div class="step" data-x="8000" data-y="0">
+        <h1>The Core</h1>
+        <ul>
+            <li><h4>Integration with docker registry</h4>
+                <ul>
+                    <li>thanks to the design of docker registry service, we can do more.</li>
+                </ul>
+            </li>
+            <li><h4>Imitate a fake rootfs</h4>
+                <ul>
+                    <li>LD_PRELOAD to hook into libc calling</li>
+                    <li>ptrace with SYS_PTRACE cap, may cause some kernel bugs, but theoretically it's safe</li>
+                    <li>chroot, a long history</li>
+                    <li>runc, huge and not so suitable for CI</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="9000" data-y="0">
+        <h1>libc hook</h1>
+        <ul>
+            <li>after digging some documents. golang's syscall design cause us a lot of trouble, but worth.</li>
+            <li>thanks to the mess of POSIX, the kernel interact is not as easy as we expected.</li>
+            <li><h4>but we made it!</h4></li>
+        </ul>
+    </div>
+
+    <div class="step" data-x="10000" data-y="0">
         <h1>some valuable features will be added</h1>
         <ul>
-            <li><h3>keeping tearing down docker image push command</h3>
+            <li><h4>keeping tearing down docker image push command</h4>
                 <ul>
                     <li>for: parallel building each independent layer and combine to one</li>
                 </ul>
             </li>
-            <li><h3>supporting more chroot replacing solution</h3></li>
+            <li><h4>supporting more chroot replacing solution</h4></li>
         </ul>
     </div>
 
-    <div class="step" data-x="8000" data-y="0">
+    <div class="step" data-x="11000" data-y="0">
         <h1>thanks!</h1>
     </div>
 
