@@ -11,6 +11,8 @@ import (
 	"github.com/setekhid/ketos/pkg/registry"
 )
 
+const KetosMetaFolder = ".ketos"
+
 // SeekKetosFolder seek .ketos from path to root
 func SeekKetosFolder(path string) (string, error) {
 
@@ -21,7 +23,7 @@ func SeekKetosFolder(path string) (string, error) {
 
 	for {
 
-		mayKetos := filepath.Join(path, ".ketos")
+		mayKetos := filepath.Join(path, KetosMetaFolder)
 		_, err := os.Stat(mayKetos)
 		if err == nil {
 			return mayKetos, nil
@@ -67,6 +69,11 @@ func (m MetaFolders) InitFolders() error {
 	}
 
 	err = os.MkdirAll(m.Layers(), os.ModePerm)
+	if err != nil {
+		return errors.Wrap(err, "mkdir layers")
+	}
+
+	err = os.MkdirAll(m.Packs(), os.ModePerm)
 	if err != nil {
 		return errors.Wrap(err, "mkdir layers")
 	}
@@ -119,6 +126,18 @@ func (m MetaFolders) Layers() string {
 // Layer return the specified layer directory
 func (m MetaFolders) Layer(digest digest.Digest) string {
 	return filepath.Join(m.Layers(), digest.Hex())
+}
+
+// FIXME store all layer to packs and make layers folder act as a cache
+
+// Packs return the cached packs folder
+func (m MetaFolders) Packs() string {
+	return filepath.Join(string(m), "packs")
+}
+
+// Pack return the spcified pack
+func (m MetaFolders) Pack(digest digest.Digest) string {
+	return filepath.Join(m.Packs(), digest.Hex()+".tar.gz")
 }
 
 // MetaLayer return the json file of config layer

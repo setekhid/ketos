@@ -10,6 +10,7 @@ import (
 	manifestV1 "github.com/docker/distribution/manifest/schema1"
 	"github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
+	"github.com/setekhid/ketos/pkg/registry"
 	"gopkg.in/yaml.v2"
 )
 
@@ -107,6 +108,18 @@ func (d *Metadatas) GetConfig() (*KetosConfig, error) {
 	return config, nil
 }
 
+func (d *Metadatas) ConnectRegistry() (*registry.Repository, error) {
+
+	conf, err := d.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	imageName := conf.Repository.Registry + "/" + conf.Repository.Name
+	repo, _, err := registry.DockerImage(imageName).Connect()
+	return repo, err
+}
+
 func (d *Metadatas) ListTags() ([]string, error) {
 
 	infos, err := ioutil.ReadDir(d.folders.Manifests())
@@ -169,4 +182,40 @@ func (d *Metadatas) ContainerPath() string {
 
 func (d *Metadatas) MetaFolderPath() string {
 	return string(d.folders)
+}
+
+var (
+	metaFolders = map[string]*Metadatas{}
+)
+
+func GetMetadatas(path string) (*Metadatas, error) {
+
+	path, err := SeekKetosFolder(path)
+	if err != nil {
+		return nil, err
+	}
+
+	meta, ok := metaFolders[path]
+	if ok {
+		return meta, nil
+	}
+
+	meta, err = ConnMetadata(path)
+	if err != nil {
+		return nil, err
+	}
+
+	metaFolders[path] = meta
+
+	return meta, nil
+}
+
+func CurrentMetadatas() (*Metadatas, error) {
+
+	wd, err := os.Getwd()
+	if err != nil {
+		return nil, errors.Wrap(err, "get working directory")
+	}
+
+	return GetMetadatas(wd)
 }
