@@ -10,6 +10,7 @@ import (
 	manifestV1 "github.com/docker/distribution/manifest/schema1"
 	"github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
+	"github.com/setekhid/ketos/pkg/registry"
 	"gopkg.in/yaml.v2"
 )
 
@@ -105,6 +106,18 @@ func (d *Metadatas) GetConfig() (*KetosConfig, error) {
 	}
 
 	return config, nil
+}
+
+func (d *Metadatas) ConnectRegistry() (*registry.Repository, error) {
+
+	conf, err := d.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	imageName := conf.Repository.Registry + "/" + conf.Repository.Name
+	repo, _, err := registry.DockerImage(imageName).Connect()
+	return repo, err
 }
 
 func (d *Metadatas) ListTags() ([]string, error) {
