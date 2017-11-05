@@ -5,10 +5,17 @@ go:
     - tip
 
 install:
-    - curl -fsSL -o ./dep https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 && chmod +x ./dep
-
-before_script:
-    - ./dep ensure
+    - curl -fsSL -o $GOPATH/bin/dep https://github.com/golang/dep/releases/download/v0.3.2/dep-linux-amd64 && chmod +x $GOPATH/bin/dep
 
 script:
-    - go test -short -race $(go list ./... | grep -v /vendor/)
+
+    - |
+        [ "${TRAVIS_EVENT_TYPE}" == "cron" ] || \
+        (make vendor && make build && make test)
+
+    - |
+        [ "${TRAVIS_EVENT_TYPE}" != "cron" ] || \
+        ( \
+            docker build -t setekhid/ketos:latest . && \
+            cd test && bash ./test.sh \
+        )

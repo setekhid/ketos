@@ -4,6 +4,7 @@
 
 # xcbuild building results
 /xcb
+/chr
 /libketos-hookroot.so
 /libketos-hookroot.h
 
