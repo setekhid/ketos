@@ -125,6 +125,9 @@ func (r *OverlayFS) CopyForWriting(path string) (string, error) {
 	defer lowerFile.Close()
 
 	_, err = io.Copy(topFile, lowerFile)
+	if err != nil {
+		return "", errors.Wrap(err, "copy lower level file to container")
+	}
 
 	return topFilePath, nil
 }

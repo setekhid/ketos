@@ -29,7 +29,5 @@ func tagMain(cmd *cobra.Command, args []string) error {
 
 	manifest, err := meta.GetManifest(srcTag)
 	manifest.Tag = destTag
-	err = meta.PutManifest(destTag, manifest)
-
-	return nil
+	return meta.PutManifest(destTag, manifest)
 }
