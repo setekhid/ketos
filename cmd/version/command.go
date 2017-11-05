@@ -13,15 +13,16 @@ var (
 
 var (
 	Command = &cobra.Command{
-		Use:     "version",
-		Aliases: []string{"v"},
-		Short:   "show xcb version",
-		RunE:    versionMain,
+		Use:   "version",
+		Short: "show xcb version",
+		Args:  cobra.NoArgs,
+
+		RunE: versionMain,
 	}
 )
 
 func versionMain(cmd *cobra.Command, args []string) error {
-	fmt.Printf("Version: %10s\nCommit: %10s\n", Version, Commit)
 
-	return nil
+	_, err := fmt.Printf("Version: %10s\nCommit: %10s\n", Version, Commit)
+	return err
 }

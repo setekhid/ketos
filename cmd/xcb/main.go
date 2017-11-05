@@ -1,9 +1,7 @@
 package main
 
 import (
-	"github.com/setekhid/ketos/cmd/chroot"
 	"github.com/setekhid/ketos/cmd/commit"
-	"github.com/setekhid/ketos/cmd/image"
 	"github.com/setekhid/ketos/cmd/init"
 	"github.com/setekhid/ketos/cmd/oplayer"
 	"github.com/setekhid/ketos/cmd/opmanifest"
@@ -17,16 +15,16 @@ import (
 func main() {
 
 	Command.AddCommand(
-		pull.Command,
-		chroot.Command,
-		commit.Command,
-		push.Command,
 		version.Command,
-		image.Command,
 
+		// upper level
 		initk.Command,
 		tag.Command,
+		pull.Command,
+		commit.Command,
+		push.Command,
 
+		// lower level
 		opmanifest.CatManifest,
 		opmanifest.PutManifest,
 		oplayer.HasLayer,
