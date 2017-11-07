@@ -41,3 +41,5 @@ clean:
 
 vendor: Gopkg.lock Gopkg.toml
 	${KETOS_DEP_EXEC} ensure -vendor-only
+
+.PHONY: build test install clean
