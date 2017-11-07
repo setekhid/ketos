@@ -4,6 +4,7 @@ var (
 	registryConfigs       = map[string]RegistryConfig{}
 	defaultRegistryConfig = RegistryConfig{
 		Insecure: true,
+		Mirror:   "",
 	}
 )
 
@@ -11,13 +12,15 @@ var (
 type RegistryConfig struct {
 	Name     string
 	Insecure bool
+	Mirror   string
 }
 
 // ConfigRegistry config a docker registry
-func ConfigRegistry(name string, insecure bool) {
+func ConfigRegistry(name string, insecure bool, mirror string) {
 	registryConfigs[name] = RegistryConfig{
 		Name:     name,
 		Insecure: insecure,
+		Mirror:   mirror,
 	}
 }
 

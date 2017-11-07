@@ -1,10 +1,10 @@
 package pull
 
 import (
-	"fmt"
-	"strings"
+	"os"
 
 	"github.com/setekhid/ketos/pkg/metadata"
+	"github.com/setekhid/ketos/pkg/registry"
 	"github.com/spf13/cobra"
 )
 
@@ -47,8 +47,46 @@ func pullMain(cmd *cobra.Command, args []string) error {
 
 	// sync layers
 	for _, layer := range manifest.FSLayers {
+
 		layerPath := meta.LayerPath(layer.BlobSum)
-		err = repo.GetLayer2Directory(layer.BlobSum, layerPath)
+		packFile := meta.PackFile(layer.BlobSum)
+
+		// cache pack
+		err := func() error {
+
+			pack, err := os.Create(packFile)
+			if err != nil {
+				return err
+			}
+			defer pack.Close()
+
+			err = repo.GetLayer(layer.BlobSum, pack)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}()
+		if err != nil {
+			return err
+		}
+
+		// untar layer
+		err = func() error {
+
+			pack, err := os.Open(packFile)
+			if err != nil {
+				return err
+			}
+			defer pack.Close()
+
+			err = registry.UntarLayerDirectory(pack, layerPath)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		}()
 		if err != nil {
 			return err
 		}
@@ -56,39 +94,4 @@ func pullMain(cmd *cobra.Command, args []string) error {
 
 	// sync manifest
 	return meta.PutManifest(tag, manifest)
-}
-
-func pullMain0(cmd *cobra.Command, args []string) error {
-	name, tag, err := validRef(args[0])
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	// fetch manifest, then get every layer
-	err = pullV2("library/"+name, tag)
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	fmt.Printf("%s download successfull\n", args[0])
-	return nil
-}
-
-func validRef(ref string) (string, string, error) {
-	idx := strings.LastIndex(ref, "/")
-	if idx != -1 {
-		ref = string([]byte(ref)[idx+1:])
-	}
-	repo := strings.Split(ref, ":")
-	if len(repo) > 2 {
-		return "", "", fmt.Errorf("image format error, should be \"registry/lib/name:tag\"")
-	}
-
-	if len(repo) == 2 {
-		return repo[0], repo[1], nil
-	}
-
-	return repo[0], "", nil
 }

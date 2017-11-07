@@ -10,13 +10,15 @@ import (
 	hreg "github.com/heroku/docker-registry-client/registry"
 	"github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 var (
-	DefaultRegistry   = "registry-1.docker.io"
-	QuayRegistry      = "quay.io"
-	GoogleRegistry    = "gcr.io"
-	LocalhostRegistry = "localhost:5000"
+	DefaultRegistry      = "registry-1.docker.io"
+	QuayRegistry         = "quay.io"
+	GoogleRegistry       = "gcr.io"
+	LocalhostRegistry    = "localhost:5000"
+	LocalComposeRegistry = "registry.local:5000"
 
 	// Deprecated
 	defaultRegistry = "https://registry-1.docker.io/"
@@ -128,6 +130,9 @@ func ConnectRepository(registry, repository string) (*Repository, error) {
 		proto = "http"
 	}
 	url := proto + "://" + registry
+	if len(conf.Mirror) > 0 {
+		url = proto + "://" + conf.Mirror
+	}
 
 	conn, err := NewRegitry(url, "", "")
 	if err != nil {
@@ -197,13 +202,14 @@ func (r *Repository) GetLayer2Directory(
 	}
 	defer pipeR.Close()
 
-	err = func() error {
+	go func() {
 		defer pipeW.Close()
-		return r.GetLayer(digest, pipeW)
+
+		err := r.GetLayer(digest, pipeW)
+		if err != nil {
+			log.Debugln(err)
+		}
 	}()
-	if err != nil {
-		return err
-	}
 
 	return UntarLayerDirectory(pipeR, root)
 }
@@ -224,13 +230,21 @@ func (r *Repository) PostLayerDirectory(
 	}
 	defer pipeR.Close()
 
-	digest, err := func() (digest.Digest, error) {
+	var digest digest.Digest
+	go func() {
 		defer pipeW.Close()
-		return TarLayerDirectory(pipeW, root, ignores...)
+
+		var err error
+		digest, err = TarLayerDirectory(pipeW, root, ignores...)
+		if err != nil {
+			log.Debug(err)
+		}
 	}()
+
+	err = r.PutLayer(digest, pipeR)
 	if err != nil {
 		return "", err
 	}
 
-	return digest, r.PutLayer(digest, pipeR)
+	return digest, nil
 }

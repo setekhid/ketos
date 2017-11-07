@@ -10,11 +10,11 @@ install:
 script:
 
     - |
-        [ "${TRAVIS_EVENT_TYPE}" == "cron" ] || \
+        [ "${TRAVIS_EVENT_TYPE}" != "cron" ] || \
         (make vendor && make build && make test)
 
     - |
-        [ "${TRAVIS_EVENT_TYPE}" != "cron" ] || \
+        [ "${TRAVIS_EVENT_TYPE}" == "cron" ] || \
         ( \
             docker build -t setekhid/ketos:latest . && \
             cd test && bash ./test.sh \

@@ -12,7 +12,7 @@
 .*.sw?
 
 # local test
-/.ketos/
+/taste/
 
 # exclude golang vendor
 /vendor/

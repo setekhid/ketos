@@ -35,7 +35,7 @@ func TestLayerTarUntar(t *testing.T) {
 	defer pipeR.Close()
 
 	// tar layer
-	func() {
+	go func() {
 		defer pipeW.Close()
 
 		digest, err := registry.TarLayerDirectory(pipeW, "./testdata")
