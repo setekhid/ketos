@@ -1,8 +1,6 @@
 > **Notice**:
 >
-> For now, this project only contains prototype code and some researching documents. The program may broken, and user interface may not clear. Read [`docs/prez/`](http://blog.func.xyz/ketos/prez/index.html) and use git tag `prototype` for tasting.
->
-> 2017/11/05 is the deadline, codes in master branch will work and document well.
+> For now, everything should be worked theoretically, but some dependencies may broken caused by GFW and Chinese meeting. Continuous developing is not possible. Before that, I will complete refactoring my graduation design first.
 
 # Cross Container Builder (Ketos)
 
