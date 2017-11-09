@@ -19,7 +19,7 @@ var (
 
 func init() {
 
-	flags := PullLayer.Flags()
+	flags := PushLayer.Flags()
 	flags.StringP("repository", "r", "",
 		"repository name with or without tag")
 }

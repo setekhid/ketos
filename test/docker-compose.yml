@@ -1,13 +1,17 @@
 version: '3'
 services:
 
-    registry:
+    registry.local:
         image: registry:2
         restart: always
         ports:
             - 5000:5000
 
     ketos:
-        build: .
+        image: setekhid/ketos:latest
         restart: always
+        depends_on:
+            - registry.local
         command: sleep 1800
+        volumes:
+            - ./:/test

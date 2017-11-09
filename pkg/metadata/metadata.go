@@ -176,6 +176,10 @@ func (d *Metadatas) LayerPath(digest digest.Digest) string {
 	return d.folders.Layer(digest)
 }
 
+func (d *Metadatas) PackFile(digest digest.Digest) string {
+	return d.folders.Pack(digest)
+}
+
 func (d *Metadatas) ContainerPath() string {
 	return d.folders.Container()
 }

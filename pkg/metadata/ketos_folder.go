@@ -125,7 +125,7 @@ func (m MetaFolders) Layers() string {
 
 // Layer return the specified layer directory
 func (m MetaFolders) Layer(digest digest.Digest) string {
-	return filepath.Join(m.Layers(), digest.Hex())
+	return filepath.Join(m.Layers(), digest.String())
 }
 
 // FIXME store all layer to packs and make layers folder act as a cache
@@ -137,7 +137,7 @@ func (m MetaFolders) Packs() string {
 
 // Pack return the spcified pack
 func (m MetaFolders) Pack(digest digest.Digest) string {
-	return filepath.Join(m.Packs(), digest.Hex()+".tar.gz")
+	return filepath.Join(m.Packs(), digest.String())
 }
 
 // MetaLayer return the json file of config layer
